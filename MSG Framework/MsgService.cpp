@@ -4,6 +4,7 @@
 
 #include <boost/asio.hpp>
 #include <boost/thread/thread.hpp>
+#include "tcpmonitor.h"
 
 
 class MsgService::Impl
@@ -14,6 +15,7 @@ public:
 		, thdWork(new boost::thread(
 			boost::bind(&boost::asio::io_service::run, &iosWork)))
 		, udpMsg(iosWork)
+		, tcpMsg(iosWork)
 	{}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -23,6 +25,7 @@ public:
 	boost::scoped_ptr<boost::thread> thdWork;
 
 	UdpMonitor udpMsg;
+	TcpMonitor tcpMsg;
 };
 
 MsgService::MsgService(void)
