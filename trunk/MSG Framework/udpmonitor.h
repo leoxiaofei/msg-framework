@@ -35,11 +35,11 @@ protected:
 		std::size_t packet_bytes );
 
 	void BroadcastHandler( const boost::system::error_code& ec);
-	void SendToHandler( const boost::system::error_code& ec);
 
 	void As_SendTo(unsigned int uOrder,
 		const boost::asio::mutable_buffers_1& buffer, 
 		const boost::asio::ip::udp::endpoint& point);
+	void SendToHandler( const boost::system::error_code& ec);
 
 	void SplitPacket(unsigned int uOrder, void* szData, 
 		unsigned int uSize, std::queue<UdpPacket*>& queData);

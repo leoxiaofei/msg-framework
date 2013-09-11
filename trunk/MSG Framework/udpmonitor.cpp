@@ -31,7 +31,7 @@ public:
 	std::tr1::array<char, 1024> arBuffer;
 
 	signal<void(unsigned int, unsigned int)> sigSendError;
-	signal<void(unsigned int, std::stringstream*)> sigReceiveData;
+	signal<void(unsigned int, std::tr1::shared_ptr<std::stringstream>)> sigReceiveData;
 	
 	std::map<unsigned int, unsigned int> mapTimeOut;
 	std::map<unsigned int, std::queue<UdpPacket*> > mapReadyData;
@@ -54,12 +54,24 @@ UdpMonitor::~UdpMonitor( void )
 
 bool UdpMonitor::Listen(unsigned short uPort)
 {
-	m_pImpl->ptSock = shared_ptr<ip::udp::socket>
-		(new ip::udp::socket(m_pImpl->ios, ip::udp::endpoint(ip::udp::v4(), uPort)));
-	m_pImpl->ptSock->set_option(socket_base::broadcast(true));
-	m_pImpl->ptSock->set_option(ip::udp::socket::reuse_address(true));
-	ReadyRead();
-	return true;
+	bool bRet(false);
+	try
+	{
+		m_pImpl->ptSock = shared_ptr<ip::udp::socket>
+			(new ip::udp::socket(m_pImpl->ios, ip::udp::endpoint(ip::udp::v4(), uPort)));
+		m_pImpl->ptSock->set_option(socket_base::broadcast(true));
+		m_pImpl->ptSock->set_option(ip::udp::socket::reuse_address(true));
+		ReadyRead();
+		bRet = true;
+	}
+	catch (boost::system::system_error& e)
+	{
+	}
+	catch (...)
+	{
+	}
+
+	return bRet;
 }
 
 void UdpMonitor::ReadyRead()
@@ -74,10 +86,6 @@ void UdpMonitor::ReadHandler( const boost::system::error_code& ec, std::size_t p
 	{
 		return;
 	}
-#ifdef _DEBUG
-	m_pImpl->arBuffer[packet_bytes] = '\0';
-	std::cout<<packet_bytes<<":"<<m_pImpl->arBuffer.data()<<std::endl;
-#endif
 
 	UdpPacket* pData = m_pImpl->UdpPackPool.New();
 	if (pData == NULL)
@@ -289,10 +297,8 @@ void UdpMonitor::CheckEmitReceive( unsigned int uOrder )
 		ReceivePacket& rPacket = iFind->second;
 		if (rPacket.uCurrent == rPacket.uTotal)
 		{
-			//m_pImpl->sigReceiveData(uOrder, rPacket.ptStream.get());
+			m_pImpl->sigReceiveData(uOrder, rPacket.ptStream);
 			//m_pImpl->sigSendError(0,1);
-			signal<void()> sig;
-			sig();
 			m_pImpl->mapReceiveData.erase(iFind);
 		}
 	}
