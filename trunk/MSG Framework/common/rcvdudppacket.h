@@ -1,11 +1,10 @@
-#ifndef RECEIVEPACKET_H__
-#define RECEIVEPACKET_H__
+#ifndef RCVDUDPPACKET_H__
+#define RCVDUDPPACKET_H__
 
-
-class ReceivePacket
+class RcvdUdpPacket
 {
 public:
-	ReceivePacket()
+	RcvdUdpPacket()
 	: ptStream(new std::stringstream){}
 
 	unsigned short      uCurrent;
@@ -14,4 +13,4 @@ public:
 };
 
 
-#endif // RECEIVEPACKET_H__
+#endif // RCVDUDPPACKET_H__
