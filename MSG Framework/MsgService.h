@@ -2,6 +2,7 @@
 #define NETSERVICE_H__
 
 class UdpMonitor;
+class TcpMonitor;
 
 class MsgService
 {
@@ -14,6 +15,7 @@ public:
 	void Exit();
 
 	UdpMonitor* GetUdp();
+	TcpMonitor* GetTcp();
 
 private:
 	boost::scoped_ptr<Impl> m_pImpl;

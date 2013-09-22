@@ -54,3 +54,8 @@ UdpMonitor* MsgService::GetUdp()
 {
 	return &m_pImpl->udpMsg;
 }
+
+TcpMonitor* MsgService::GetTcp()
+{
+	return &m_pImpl->tcpMsg;
+}

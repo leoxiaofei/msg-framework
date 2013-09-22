@@ -1,16 +1,17 @@
 #include "stdafx.h"
 #include "udpmonitor.h"
 
-#include "common\udppacket.h"
+#include "common/udppacket.h"
+#include "common/rcvdudppacket.h"
 #include "MsgObjectPool.hpp"
 
-#include <boost\bind.hpp>
-#include <boost\asio\placeholders.hpp>
-#include <boost\asio\ip\udp.hpp>
+#include <boost/bind.hpp>
+#include <boost/asio/placeholders.hpp>
+#include <boost/asio/ip/udp.hpp>
 
+#include <array>
 #include <iostream>
 #include <memory>
-#include "common\receivepacket.h"
 #include <assert.h>
 
 using namespace boost::asio;
@@ -26,8 +27,8 @@ public:
 	{}
 
 	io_service& ios;
-	shared_ptr<ip::udp::socket> ptSock;
 	ip::udp::endpoint epReceive;
+	shared_ptr<ip::udp::socket> ptSock;
 	std::tr1::array<char, 1024> arBuffer;
 
 	signal<void(unsigned int, unsigned int)> sigSendError;
@@ -35,9 +36,9 @@ public:
 	
 	std::map<unsigned int, unsigned int> mapTimeOut;
 	std::map<unsigned int, std::queue<UdpPacket*> > mapReadyData;
-	MsgObjectPool<UdpPacket> UdpPackPool;
+	MsgObjectPool<UdpPacket> mopPackPool;
 	
-	std::map<unsigned int, ReceivePacket> mapReceiveData;
+	std::map<unsigned int, RcvdUdpPacket> mapReceiveData;
 };
 
 UdpMonitor::UdpMonitor( boost::asio::io_service& io )
@@ -87,7 +88,7 @@ void UdpMonitor::ReadHandler( const boost::system::error_code& ec, std::size_t p
 		return;
 	}
 
-	UdpPacket* pData = m_pImpl->UdpPackPool.New();
+	UdpPacket* pData = m_pImpl->mopPackPool.New();
 	if (pData == NULL)
 	{
 		pData = new UdpPacket;
@@ -112,7 +113,7 @@ void UdpMonitor::ReadHandler( const boost::system::error_code& ec, std::size_t p
 					&& p->uTotal == pData->uTotal )
 				{
 					iFind->second.pop();
-					m_pImpl->UdpPackPool.Recycle(p);
+					m_pImpl->mopPackPool.Recycle(p);
 
 					if (!iFind->second.empty())
 					{
@@ -129,7 +130,7 @@ void UdpMonitor::ReadHandler( const boost::system::error_code& ec, std::size_t p
 		else  ///数据包
 		{
 			///保存数据
-			std::map<unsigned int, ReceivePacket>::iterator iFind = 
+			std::map<unsigned int, RcvdUdpPacket>::iterator iFind = 
 				m_pImpl->mapReceiveData.find(pData->uOrder);
 			if(iFind == m_pImpl->mapReceiveData.end())
 			{
@@ -138,7 +139,7 @@ void UdpMonitor::ReadHandler( const boost::system::error_code& ec, std::size_t p
 				{
 					break;
 				}
-				ReceivePacket& rPacket = m_pImpl->mapReceiveData[pData->uOrder];
+				RcvdUdpPacket& rPacket = m_pImpl->mapReceiveData[pData->uOrder];
 				rPacket.uCurrent = pData->uCurrent;
 				rPacket.uTotal   = pData->uTotal;
 				rPacket.ptStream->write((char*)pData->szData, pData->uUsed);
@@ -146,7 +147,7 @@ void UdpMonitor::ReadHandler( const boost::system::error_code& ec, std::size_t p
 			else
 			{
 				///后续数据
-				ReceivePacket& rPacket = iFind->second;
+				RcvdUdpPacket& rPacket = iFind->second;
 				if (pData->uTotal != rPacket.uTotal)
 				{
 					break;
@@ -165,7 +166,7 @@ void UdpMonitor::ReadHandler( const boost::system::error_code& ec, std::size_t p
 		}
 	}while(0);
 
-	m_pImpl->UdpPackPool.Recycle(pData);
+	m_pImpl->mopPackPool.Recycle(pData);
 	ReadyRead();
 }
 
@@ -210,7 +211,7 @@ void UdpMonitor::SplitPacket( unsigned int uOrder, void* szData,
 
 	do 
 	{
-		UdpPacket* pData = m_pImpl->UdpPackPool.New();
+		UdpPacket* pData = m_pImpl->mopPackPool.New();
 		if (pData == NULL)
 		{
 			pData = new UdpPacket;
@@ -290,11 +291,11 @@ signal<void(unsigned int, unsigned int)>* UdpMonitor::sg_SendError()
 
 void UdpMonitor::CheckEmitReceive( unsigned int uOrder )
 {
-	std::map<unsigned int, ReceivePacket>::iterator iFind = 
+	std::map<unsigned int, RcvdUdpPacket>::iterator iFind = 
 		m_pImpl->mapReceiveData.find(uOrder);
 	if(iFind != m_pImpl->mapReceiveData.end())
 	{
-		ReceivePacket& rPacket = iFind->second;
+		RcvdUdpPacket& rPacket = iFind->second;
 		if (rPacket.uCurrent == rPacket.uTotal)
 		{
 			m_pImpl->sigReceiveData(uOrder, rPacket.ptStream);

@@ -16,12 +16,24 @@ public:
 	~TcpMonitor();
 
 	bool Listen(unsigned short sPort = 5123);
+	
+	void Connect(const std::string& strAddr, unsigned short sPort = 5123);
+
+	void SendTo(unsigned int uOrder, void* szData, unsigned int uSize,
+		const std::string& strAddr, unsigned short uPort = 5123);
 
 protected:
 	void ReadyAccept();
 	void AcceptHandler(const boost::system::error_code& ec, 
 		std::tr1::shared_ptr<boost::asio::ip::tcp::socket> ptSocket);
 
+	void ConnectHandler(const boost::system::error_code& ec, 
+		std::tr1::shared_ptr<boost::asio::ip::tcp::socket> ptSocket,
+		std::tr1::shared_ptr<boost::asio::ip::tcp::endpoint> ptEndPoint);
+
+	void AssociateSession(
+		const std::tr1::shared_ptr<boost::asio::ip::tcp::socket>& ptSocket,
+		boost::asio::ip::tcp::endpoint& epReceive);
 private:
 	std::tr1::shared_ptr<Impl> m_pImpl;
 };
