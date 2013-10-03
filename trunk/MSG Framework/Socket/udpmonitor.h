@@ -11,6 +11,8 @@
 #include <boost/asio/ip/udp.hpp>
 
 struct UdpPacket;
+class UdpSession;
+class UdpSignals;
 
 class UdpMonitor
 {
@@ -25,9 +27,7 @@ public:
 	void SendTo(unsigned int uOrder, void* szData, unsigned int uSize,
 		const std::string& strAddr, unsigned short uPort = 5123);
 
-	boost::signals2::signal<void(unsigned int, unsigned int)> *sg_SendError();
-// 	boost::signals2::signal<void(unsigned int, std::tr1::shared_ptr<std::stringstream>)> *
-// 		sg_ReceiveData();
+	UdpSignals* GetSignals();
 
 protected:
 	void ReadyRead();
@@ -41,13 +41,14 @@ protected:
 		const boost::asio::ip::udp::endpoint& point);
 	void SendToHandler( const boost::system::error_code& ec);
 
-	void SplitPacket(unsigned int uOrder, void* szData, 
-		unsigned int uSize, std::queue<UdpPacket*>& queData);
-
-	bool CheckPacket(UdpPacket* packet);
 	void SendPacket(UdpPacket* packet, const boost::asio::ip::udp::endpoint& point);
+	void ReceiveData(std::tr1::shared_ptr<std::stringstream> ptData, 
+		const boost::asio::ip::udp::endpoint& point);
 
-	void CheckEmitReceive(unsigned int uOrder);
+	UdpSession* FindSession(const boost::asio::ip::udp::endpoint& point);
+	UdpSession* CreateSession(const boost::asio::ip::udp::endpoint& point);
+
+	void GetEpDesc(const boost::asio::ip::udp::endpoint& point, std::string& strDesc);
 
 private:
 	std::tr1::shared_ptr<Impl> m_pImpl;

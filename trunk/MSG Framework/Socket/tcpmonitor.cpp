@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "tcpmonitor.h"
 #include "tcpsession.h"
-#include "common/tcppacket.h"
+#include "tcppacket.h"
+#include "../Tools/MsgObjectPool.hpp"
 
 #include <boost/bind.hpp>
 #include <boost/asio/ip/tcp.hpp>
@@ -93,31 +94,22 @@ void TcpMonitor::ConnectHandler( const boost::system::error_code& ec,
 
 void TcpMonitor::AssociateSession( 
 	const std::tr1::shared_ptr<boost::asio::ip::tcp::socket>& ptSocket,
-	boost::asio::ip::tcp::endpoint& epReceive )
+	const boost::asio::ip::tcp::endpoint& epReceive )
 {
 	shared_ptr<TcpSession> ptSession(new TcpSession(m_pImpl->ios, m_pImpl->mopPackPool));
 	ptSession->Connected(ptSocket);
 
-	std::stringstream ss;
-	ss<<epReceive.address().to_string()
-	  <<":"
-	  <<epReceive.port();
-
 	std::string strDes;
-	ss>>strDes;
+	GetEpDesc(epReceive, strDes);
 	m_pImpl->hsSession[strDes] = ptSession;
 }
 
 void TcpMonitor::SendTo( unsigned int uOrder, void* szData, unsigned int uSize,
 	const std::string& strAddr, unsigned short uPort /*= 5123*/ )
 {
-	std::stringstream ss;
-	ss<<strAddr
-	  <<":"
-	  <<uPort;
-
+	ip::tcp::endpoint senderEndpoint(ip::address_v4::from_string(strAddr), uPort);
 	std::string strDes;
-	ss>>strDes;
+	GetEpDesc(senderEndpoint, strDes);
 
 	HsSession::iterator iFind = m_pImpl->hsSession.find(strDes);
 	if(iFind != m_pImpl->hsSession.end())
@@ -125,5 +117,12 @@ void TcpMonitor::SendTo( unsigned int uOrder, void* szData, unsigned int uSize,
 		iFind->second->SendData(uOrder, szData, uSize);
 	}
 
+}
+
+void TcpMonitor::GetEpDesc( const boost::asio::ip::tcp::endpoint& point, std::string& strDesc )
+{
+	std::stringstream ss;
+	ss << point;
+	ss >> strDesc;
 }
 

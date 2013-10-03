@@ -1,8 +1,10 @@
 #ifndef TCPSESSION_H__
 #define TCPSESSION_H__
 
-#include "MsgObjectPool.hpp"
-#include <boost\asio\ip\tcp.hpp>
+#include <boost/asio/ip/tcp.hpp>
+
+template <class T>
+class MsgObjectPool;
 
 struct SendTcpPacket;
 
