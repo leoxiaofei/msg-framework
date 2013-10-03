@@ -33,7 +33,10 @@ protected:
 
 	void AssociateSession(
 		const std::tr1::shared_ptr<boost::asio::ip::tcp::socket>& ptSocket,
-		boost::asio::ip::tcp::endpoint& epReceive);
+		const boost::asio::ip::tcp::endpoint& epReceive);
+
+	void GetEpDesc(const boost::asio::ip::tcp::endpoint& point, std::string& strDesc);
+
 private:
 	std::tr1::shared_ptr<Impl> m_pImpl;
 };

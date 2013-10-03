@@ -1,8 +1,10 @@
 #include "stdafx.h"
 
+
 #include "tcpsession.h"
-#include "common/tcppacket.h"
-#include "common/rcvdtcppacket.h"
+#include "tcppacket.h"
+#include "rcvdtcppacket.h"
+#include "../Tools/MsgObjectPool.hpp"
 
 #include <boost/bind.hpp>
 #include <boost/asio/placeholders.hpp>

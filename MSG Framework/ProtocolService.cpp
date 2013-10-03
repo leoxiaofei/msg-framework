@@ -27,8 +27,9 @@ public:
 	boost::scoped_ptr<boost::thread> thdWork;
 
 	//////////////////////////////////////////////////////////////////////////
-	///信号槽
+	///
 
+	
 };
 
 ProtocolService::ProtocolService(void)
@@ -45,4 +46,21 @@ void ProtocolService::Exit()
 {
 	m_pImpl->iosWork.stop();
 	m_pImpl->thdWork->join();
+}
+
+void ProtocolService::ReceiveUdpData( const std::string& strAddr, 
+	unsigned int uPort, std::tr1::shared_ptr<std::stringstream> ptData )
+{
+	m_pImpl->iosWork.post(boost::bind(&ProtocolService::As_RecUdpData, this,
+		strAddr, uPort, ptData));
+}
+
+void ProtocolService::As_RecUdpData( const std::string& strAddr, 
+	unsigned int uPort, std::tr1::shared_ptr<std::stringstream> ptData )
+{
+	///分析来源
+
+	///解析包
+
+	///上传
 }
