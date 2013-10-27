@@ -133,8 +133,7 @@ bool UdpSession::CheckPacket( UdpPacket* packet )
 
 	do 
 	{
-		if (   packet->uOrder == 0
-			|| packet->uTotal == 0
+		if (   packet->uTotal == 0
 			|| packet->uCurrent == 0 )
 		{
 			break;

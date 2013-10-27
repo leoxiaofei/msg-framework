@@ -3,6 +3,7 @@
 
 #include <boost/asio.hpp>
 #include <boost/thread/thread.hpp>
+#include "Protocol/Dispatcher.h"
 
 class ProtocolService::Impl
 {
@@ -11,6 +12,7 @@ public:
 	: wkWork(new boost::asio::io_service::work(iosWork))
 	, thdWork(new boost::thread(
 		boost::bind(&boost::asio::io_service::run, &iosWork)))
+	, dispatcher(iosWork)
 	{}
 
 	~Impl()
@@ -28,7 +30,7 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////
 	///
-
+	Dispatcher dispatcher;
 	
 };
 
@@ -48,19 +50,3 @@ void ProtocolService::Exit()
 	m_pImpl->thdWork->join();
 }
 
-void ProtocolService::ReceiveUdpData( const std::string& strAddr, 
-	unsigned int uPort, std::tr1::shared_ptr<std::stringstream> ptData )
-{
-	m_pImpl->iosWork.post(boost::bind(&ProtocolService::As_RecUdpData, this,
-		strAddr, uPort, ptData));
-}
-
-void ProtocolService::As_RecUdpData( const std::string& strAddr, 
-	unsigned int uPort, std::tr1::shared_ptr<std::stringstream> ptData )
-{
-	///分析来源
-
-	///解析包
-
-	///上传
-}
