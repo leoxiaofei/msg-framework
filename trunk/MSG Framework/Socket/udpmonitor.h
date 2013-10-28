@@ -12,7 +12,7 @@
 
 struct UdpPacket;
 class UdpSession;
-class UdpSignals;
+class MsgSignals;
 
 class UdpMonitor
 {
@@ -27,24 +27,24 @@ public:
 	void SendTo(unsigned int uOrder, void* szData, unsigned int uSize,
 		const std::string& strAddr, unsigned short uPort = 5123);
 
-	UdpSignals* GetSignals();
+	MsgSignals* GetSignals();
 
 protected:
 	void ReadyRead();
 	void ReadHandler( const boost::system::error_code& ec, 
 		std::size_t packet_bytes );
 
-
-	void As_SendTo(unsigned int uOrder,
-		const boost::asio::mutable_buffers_1& buffer, 
-		const boost::asio::ip::udp::endpoint& point);
 	void As_Broadcast(const boost::asio::mutable_buffers_1& buffer, 
 		const boost::asio::ip::udp::endpoint& point);
 	void BroadcastPacket(UdpPacket* packet, const boost::asio::ip::udp::endpoint& point);
 	void BroadcastHandler( const boost::system::error_code& ec);
 
+	void As_SendTo(unsigned int uOrder,
+		const boost::asio::mutable_buffers_1& buffer, 
+		const boost::asio::ip::udp::endpoint& point);
 	void SendPacket(UdpPacket* packet, const boost::asio::ip::udp::endpoint& point);
 	void SendToHandler( const boost::system::error_code& ec);
+
 	void ReceiveData(std::tr1::shared_ptr<std::stringstream> ptData, 
 		const boost::asio::ip::udp::endpoint& point);
 

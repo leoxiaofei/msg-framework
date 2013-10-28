@@ -2,6 +2,7 @@
 #include "tcpmonitor.h"
 #include "tcpsession.h"
 #include "tcppacket.h"
+#include "msgsignals.h"
 #include "../Tools/MsgObjectPool.hpp"
 
 #include <boost/bind.hpp>
@@ -29,6 +30,7 @@ public:
 	ip::tcp::endpoint             epReceive;
 	HsSession hsSession;
 	MsgObjectPool<SendTcpPacket> mopPackPool;
+	MsgSignals tcpSig;
 };
 
 TcpMonitor::TcpMonitor(io_service& io)
@@ -98,6 +100,8 @@ void TcpMonitor::AssociateSession(
 {
 	shared_ptr<TcpSession> ptSession(new TcpSession(m_pImpl->ios, m_pImpl->mopPackPool));
 	ptSession->Connected(ptSocket);
+	ptSession->SetReceiveFunc(boost::bind(&TcpMonitor::ReceiveData, this, _1, _2));
+
 
 	std::string strDes;
 	GetEpDesc(epReceive, strDes);
@@ -124,5 +128,16 @@ void TcpMonitor::GetEpDesc( const boost::asio::ip::tcp::endpoint& point, std::st
 	std::stringstream ss;
 	ss << point;
 	ss >> strDesc;
+}
+
+void TcpMonitor::ReceiveData( std::tr1::shared_ptr<std::stringstream> ptData, 
+	const boost::asio::ip::tcp::endpoint& point )
+{
+	m_pImpl->tcpSig.EmitReceive(point.address().to_string(), point.port(), ptData);
+}
+
+MsgSignals* TcpMonitor::GetSignals() const
+{
+	return &m_pImpl->tcpSig;
 }
 

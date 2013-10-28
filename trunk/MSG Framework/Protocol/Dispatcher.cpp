@@ -41,11 +41,11 @@ void Dispatcher::As_RecUdpData( const std::string& strAddr,
 
 bool Dispatcher::SendData( unsigned int uHostId, std::tr1::shared_ptr<std::stringstream> ptData )
 {
-
+	return false;
 }
 
 bool Dispatcher::BroadcastData( std::tr1::shared_ptr<std::stringstream> ptData )
 {
-
+	return false;
 }
 

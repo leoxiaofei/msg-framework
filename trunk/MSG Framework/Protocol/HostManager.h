@@ -19,6 +19,13 @@ public:
 	HostInfo* FindHost(const std::string& strIp, unsigned short uPort);
 	HostInfo* FindHost(unsigned int uHostId);
 
+	void DeleteHost(unsigned int uHostId);
+	void DeleteHost(const std::string& strIp, unsigned short uPort);
+
+protected:
+	void AddHost(HostInfo* pHostInfo);
+	void RemoveHost(const HostInfo* pHostInfo);
+
 private:
 	HostManager();
 	~HostManager();

@@ -68,7 +68,47 @@ unsigned int HostManager::NewHost( const std::string& strIp, unsigned short uPor
 	pHostInfo->strIp = strIp;
 	pHostInfo->uPort = uPort;
 	pHostInfo->uHostId = m_pImpl->icHost();
-
+	AddHost(pHostInfo);
 	return pHostInfo->uHostId;
 }
 
+void HostManager::AddHost( HostInfo* pHostInfo )
+{
+	std::string strTemp;
+	std::stringstream ss;
+	ss<<pHostInfo->strIp<<pHostInfo->uPort;
+	ss>>strTemp;
+	m_pImpl->hsIpHost[strTemp] = pHostInfo;
+	m_pImpl->mapIdHost[pHostInfo->uHostId] = pHostInfo;
+}
+
+
+void HostManager::RemoveHost( const HostInfo* pHostInfo )
+{
+	std::string strTemp;
+	std::stringstream ss;
+	ss<<pHostInfo->strIp<<pHostInfo->uPort;
+	ss>>strTemp;
+	m_pImpl->hsIpHost.erase(strTemp);
+	m_pImpl->mapIdHost.erase(pHostInfo->uHostId);
+}
+
+void HostManager::DeleteHost( unsigned int uHostId )
+{
+	HostInfo* pHostInfo = FindHost(uHostId);
+	if (pHostInfo)
+	{
+		RemoveHost(pHostInfo);
+		m_pImpl->mopHostPool.Recycle(pHostInfo);
+	}
+}
+
+void HostManager::DeleteHost( const std::string& strIp, unsigned short uPort )
+{
+	HostInfo* pHostInfo = FindHost(strIp, uPort);
+	if (pHostInfo)
+	{
+		RemoveHost(pHostInfo);
+		m_pImpl->mopHostPool.Recycle(pHostInfo);		
+	}
+}

@@ -16,7 +16,7 @@
 #include <assert.h>
 #include <unordered_map>
 #include <iosfwd>
-#include "udpsignals.h"
+#include "msgsignals.h"
 
 using namespace boost::asio;
 using namespace boost::signals2;
@@ -38,7 +38,7 @@ public:
 	std::tr1::array<char, 1024> arBuffer;
 
 // 	signal<void(unsigned int, unsigned int)> sigSendError;
-	UdpSignals udpSig;
+	MsgSignals udpSig;
 
 	HsSession hsSession;
 
@@ -104,11 +104,6 @@ void UdpMonitor::ReadHandler( const boost::system::error_code& ec, std::size_t p
 	ReadyRead();
 }
 
-void UdpMonitor::Broadcast(void* szData, unsigned int uSize, unsigned short uPort)
-{
-
-}
-
 void UdpMonitor::SendTo(unsigned int uOrder, void* szData, unsigned int uSize, 
 					   const std::string& strAddr, unsigned short uPort /*= 2425*/ )
 {
@@ -137,6 +132,13 @@ void UdpMonitor::As_SendTo( unsigned int uOrder,
 	//////////////////////////////////////////////////////////////////////////
 }
 
+void UdpMonitor::Broadcast(void* szData, unsigned int uSize, unsigned short uPort)
+{
+	ip::udp::endpoint senderEndpoint(ip::address_v4::broadcast(), uPort);
+	m_pImpl->ios.post(boost::bind(&UdpMonitor::As_Broadcast, this,
+		buffer(szData, uSize), senderEndpoint));
+}
+
 void UdpMonitor::As_Broadcast( const boost::asio::mutable_buffers_1& buffer,
 	const boost::asio::ip::udp::endpoint& point )
 {
@@ -158,7 +160,6 @@ void UdpMonitor::As_Broadcast( const boost::asio::mutable_buffers_1& buffer,
 
 void UdpMonitor::BroadcastPacket( UdpPacket* packet, const boost::asio::ip::udp::endpoint& point )
 {
-	//ip::udp::endpoint senderEndpoint(ip::address_v4::broadcast(), uPort);
 	m_pImpl->ptSock->async_send_to(buffer((void*)packet, packet->uUsed + 10), point,
 		boost::bind(&UdpMonitor::BroadcastHandler, this, placeholders::error));
 	m_pImpl->mopPackPool.Recycle(packet);
@@ -219,7 +220,7 @@ void UdpMonitor::GetEpDesc( const boost::asio::ip::udp::endpoint& point, std::st
 	ss >> strDesc;
 }
 
-UdpSignals* UdpMonitor::GetSignals()
+MsgSignals* UdpMonitor::GetSignals()
 {
 	return &m_pImpl->udpSig;
 }

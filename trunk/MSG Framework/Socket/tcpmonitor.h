@@ -6,7 +6,7 @@
 #include <boost/asio/error.hpp>
 #include <boost/asio/ip/tcp.hpp>
 
-
+class MsgSignals;
 
 class TcpMonitor
 {
@@ -21,6 +21,8 @@ public:
 
 	void SendTo(unsigned int uOrder, void* szData, unsigned int uSize,
 		const std::string& strAddr, unsigned short uPort = 5123);
+
+	MsgSignals* GetSignals() const;
 
 protected:
 	void ReadyAccept();
@@ -37,6 +39,8 @@ protected:
 
 	void GetEpDesc(const boost::asio::ip::tcp::endpoint& point, std::string& strDesc);
 
+	void ReceiveData(std::tr1::shared_ptr<std::stringstream> ptData, 
+		const boost::asio::ip::tcp::endpoint& point);
 private:
 	std::tr1::shared_ptr<Impl> m_pImpl;
 };
