@@ -50,3 +50,8 @@ void ProtocolService::Exit()
 	m_pImpl->thdWork->join();
 }
 
+Dispatcher* ProtocolService::GetDispatcher()
+{
+	return &m_pImpl->dispatcher;
+}
+

@@ -23,8 +23,8 @@ public:
 
 	bool Listen(unsigned short sPort = 5123);
 
-	void Broadcast(void* szData, unsigned int uSize, unsigned short uPort = 5123);
-	void SendTo(unsigned int uOrder, void* szData, unsigned int uSize,
+	void Broadcast(const std::tr1::shared_ptr<std::stringstream>& ptData, unsigned short uPort = 5123);
+	void SendTo(unsigned int uOrder, const std::tr1::shared_ptr<std::stringstream>& ptData,
 		const std::string& strAddr, unsigned short uPort = 5123);
 
 	MsgSignals* GetSignals();
@@ -34,13 +34,13 @@ protected:
 	void ReadHandler( const boost::system::error_code& ec, 
 		std::size_t packet_bytes );
 
-	void As_Broadcast(const boost::asio::mutable_buffers_1& buffer, 
+	void As_Broadcast(const std::tr1::shared_ptr<std::stringstream>& ptData, 
 		const boost::asio::ip::udp::endpoint& point);
 	void BroadcastPacket(UdpPacket* packet, const boost::asio::ip::udp::endpoint& point);
 	void BroadcastHandler( const boost::system::error_code& ec);
 
 	void As_SendTo(unsigned int uOrder,
-		const boost::asio::mutable_buffers_1& buffer, 
+		const std::tr1::shared_ptr<std::stringstream>& ptData, 
 		const boost::asio::ip::udp::endpoint& point);
 	void SendPacket(UdpPacket* packet, const boost::asio::ip::udp::endpoint& point);
 	void SendToHandler( const boost::system::error_code& ec);

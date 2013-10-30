@@ -13,12 +13,12 @@ public:
 	~MsgSignals();
 
 	typedef boost::signals2::signal<void(const std::string&, unsigned int, 
-		std::tr1::shared_ptr<std::stringstream>)> SigReceive;
+		const std::tr1::shared_ptr<std::stringstream>&)> SigReceive;
 	typedef SigReceive::slot_type SlotReceive;
 
 	void ConnectReceive(const SlotReceive& pFunc);
 	void EmitReceive(const std::string& strAddr, unsigned int uPort, 
-		std::tr1::shared_ptr<std::stringstream> ptData);
+		const std::tr1::shared_ptr<std::stringstream>& ptData);
 
 
 	typedef boost::signals2::signal<void(unsigned int, unsigned int)> SigError;

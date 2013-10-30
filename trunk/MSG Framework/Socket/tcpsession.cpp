@@ -117,7 +117,7 @@ void TcpSession::ReceiveBodyHandler( const boost::system::error_code& ec, std::s
 	}
 }
 
-void TcpSession::SendData( unsigned int uOrder, void* szData, unsigned int uSize )
+void TcpSession::SendData( unsigned int uOrder, const char* szData, unsigned int uSize )
 {
 	SendTcpPacket* pPacket = m_pImpl->mopPackPool.New();
 	if (pPacket == NULL)

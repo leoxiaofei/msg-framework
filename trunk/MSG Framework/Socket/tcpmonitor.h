@@ -19,7 +19,7 @@ public:
 	
 	void Connect(const std::string& strAddr, unsigned short sPort = 5123);
 
-	void SendTo(unsigned int uOrder, void* szData, unsigned int uSize,
+	void SendTo(unsigned int uOrder, const std::tr1::shared_ptr<std::stringstream>& ptData,
 		const std::string& strAddr, unsigned short uPort = 5123);
 
 	MsgSignals* GetSignals() const;

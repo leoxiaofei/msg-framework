@@ -17,7 +17,7 @@ class HostManager::Impl
 {
 public:
 	MsgObjectPool<HostInfo> mopHostPool;
-	HsIpHost hsIpHost;
+	HsIpHost hsIpHost[TT_TOTAL];
 	MapIdHost mapIdHost;
 	IdCreater<unsigned int> icHost;
 };
@@ -32,21 +32,6 @@ HostManager::~HostManager()
 
 }
 
-HostInfo* HostManager::FindHost( const std::string& strIp, unsigned short uPort )
-{
-	HostInfo* pRet(NULL);
-	std::string strTemp;
-	std::stringstream ss;
-	ss<<strIp<<uPort;
-	ss>>strTemp;
-	HsIpHost::iterator iFind = m_pImpl->hsIpHost.find(strTemp);
-	if (iFind != m_pImpl->hsIpHost.end())
-	{
-		pRet = iFind->second;
-	}
-	return pRet;
-}
-
 HostInfo* HostManager::FindHost( unsigned int uHostId )
 {
 	HostInfo* pRet(NULL);
@@ -58,18 +43,19 @@ HostInfo* HostManager::FindHost( unsigned int uHostId )
 	return pRet;
 }
 
-unsigned int HostManager::NewHost( const std::string& strIp, unsigned short uPort )
+HostInfo* HostManager::FindHost( const std::string& strIp, unsigned short uPort, TransType eType )
 {
-	HostInfo* pHostInfo = m_pImpl->mopHostPool.New();
-	if (pHostInfo == NULL)
+	HostInfo* pRet(NULL);
+	std::string strTemp;
+	std::stringstream ss;
+	ss<<strIp<<uPort;
+	ss>>strTemp;
+	HsIpHost::iterator iFind = m_pImpl->hsIpHost[eType].find(strTemp);
+	if (iFind != m_pImpl->hsIpHost[eType].end())
 	{
-		pHostInfo = new HostInfo;
+		pRet = iFind->second;
 	}
-	pHostInfo->strIp = strIp;
-	pHostInfo->uPort = uPort;
-	pHostInfo->uHostId = m_pImpl->icHost();
-	AddHost(pHostInfo);
-	return pHostInfo->uHostId;
+	return pRet;
 }
 
 void HostManager::AddHost( HostInfo* pHostInfo )
@@ -78,7 +64,7 @@ void HostManager::AddHost( HostInfo* pHostInfo )
 	std::stringstream ss;
 	ss<<pHostInfo->strIp<<pHostInfo->uPort;
 	ss>>strTemp;
-	m_pImpl->hsIpHost[strTemp] = pHostInfo;
+	m_pImpl->hsIpHost[GetHostType(pHostInfo)][strTemp] = pHostInfo;
 	m_pImpl->mapIdHost[pHostInfo->uHostId] = pHostInfo;
 }
 
@@ -89,7 +75,7 @@ void HostManager::RemoveHost( const HostInfo* pHostInfo )
 	std::stringstream ss;
 	ss<<pHostInfo->strIp<<pHostInfo->uPort;
 	ss>>strTemp;
-	m_pImpl->hsIpHost.erase(strTemp);
+	m_pImpl->hsIpHost[GetHostType(pHostInfo)].erase(strTemp);
 	m_pImpl->mapIdHost.erase(pHostInfo->uHostId);
 }
 
@@ -103,12 +89,73 @@ void HostManager::DeleteHost( unsigned int uHostId )
 	}
 }
 
-void HostManager::DeleteHost( const std::string& strIp, unsigned short uPort )
+void HostManager::DeleteHost( const std::string& strIp, unsigned short uPort, TransType eType )
 {
-	HostInfo* pHostInfo = FindHost(strIp, uPort);
+	HostInfo* pHostInfo = FindHost(strIp, uPort, eType);
 	if (pHostInfo)
 	{
 		RemoveHost(pHostInfo);
 		m_pImpl->mopHostPool.Recycle(pHostInfo);		
 	}
 }
+
+unsigned int HostManager::NewHost( const std::string& strIp, unsigned short uPort, TransType eType )
+{
+	HostInfo* pHostInfo = m_pImpl->mopHostPool.New();
+	if (pHostInfo == NULL)
+	{
+		pHostInfo = new HostInfo;
+	}
+	pHostInfo->strIp = strIp;
+	pHostInfo->uPort = uPort;
+	pHostInfo->uHostId = m_pImpl->icHost();
+	if (eType == TT_TCP)
+	{
+		pHostInfo->uHostId |= 0x80000000;
+	}
+	AddHost(pHostInfo);
+	return pHostInfo->uHostId;
+}
+
+HostManager::TransType HostManager::GetHostType( const HostInfo* pHostInfo )
+{
+	return (pHostInfo->uHostId & 0x80000000) ? TT_TCP : TT_UDP;
+}
+
+// unsigned int HostManager::NewHost( const std::string& strIp, unsigned short uPort )
+// {
+// 	HostInfo* pHostInfo = m_pImpl->mopHostPool.New();
+// 	if (pHostInfo == NULL)
+// 	{
+// 		pHostInfo = new HostInfo;
+// 	}
+// 	pHostInfo->strIp = strIp;
+// 	pHostInfo->uPort = uPort;
+// 	pHostInfo->uHostId = m_pImpl->icHost();
+// 	AddHost(pHostInfo);
+// 	return pHostInfo->uHostId;
+// }
+
+// HostInfo* HostManager::FindHost( const std::string& strIp, unsigned short uPort )
+// {
+// 	HostInfo* pRet(NULL);
+// 	std::string strTemp;
+// 	std::stringstream ss;
+// 	ss<<strIp<<uPort;
+// 	ss>>strTemp;
+// 	HsIpHost::iterator iFind = m_pImpl->hsIpHost.find(strTemp);
+// 	if (iFind != m_pImpl->hsIpHost.end())
+// 	{
+// 		pRet = iFind->second;
+// 	}
+// 	return pRet;
+// }
+// void HostManager::DeleteHost( const std::string& strIp, unsigned short uPort )
+// {
+// 	HostInfo* pHostInfo = FindHost(strIp, uPort);
+// 	if (pHostInfo)
+// 	{
+// 		RemoveHost(pHostInfo);
+// 		m_pImpl->mopHostPool.Recycle(pHostInfo);		
+// 	}
+// }

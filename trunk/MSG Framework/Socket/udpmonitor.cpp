@@ -104,21 +104,22 @@ void UdpMonitor::ReadHandler( const boost::system::error_code& ec, std::size_t p
 	ReadyRead();
 }
 
-void UdpMonitor::SendTo(unsigned int uOrder, void* szData, unsigned int uSize, 
+void UdpMonitor::SendTo(unsigned int uOrder, const std::tr1::shared_ptr<std::stringstream>& ptData, 
 					   const std::string& strAddr, unsigned short uPort /*= 2425*/ )
 {
 
 	ip::udp::endpoint senderEndpoint(ip::address_v4::from_string(strAddr), uPort);
 	m_pImpl->ios.post(boost::bind(&UdpMonitor::As_SendTo, this,
-		uOrder, buffer(szData, uSize), senderEndpoint));
+		uOrder, ptData, senderEndpoint));
 }
 
 void UdpMonitor::As_SendTo( unsigned int uOrder,
-	const boost::asio::mutable_buffers_1& buf, 
+	const std::tr1::shared_ptr<std::stringstream>& ptData, 
 	const boost::asio::ip::udp::endpoint& point )
 {
-	char* p1 = boost::asio::buffer_cast<char*>(buf);
-	std::size_t s1 = boost::asio::buffer_size(buf);
+	const std::string strBuf = ptData->str();
+	const char* szData = strBuf.c_str();
+	std::size_t uSize = strBuf.size();
 
 	//////////////////////////////////////////////////////////////////////////
 	///·¢ËÍÏûÏ¢
@@ -128,22 +129,23 @@ void UdpMonitor::As_SendTo( unsigned int uOrder,
 		pSession = CreateSession(point);
 	}
 
-	pSession->SendData(uOrder, p1, s1);
+	pSession->SendData(uOrder, szData, uSize);
 	//////////////////////////////////////////////////////////////////////////
 }
 
-void UdpMonitor::Broadcast(void* szData, unsigned int uSize, unsigned short uPort)
+void UdpMonitor::Broadcast(const std::tr1::shared_ptr<std::stringstream>& ptData, unsigned short uPort)
 {
 	ip::udp::endpoint senderEndpoint(ip::address_v4::broadcast(), uPort);
 	m_pImpl->ios.post(boost::bind(&UdpMonitor::As_Broadcast, this,
-		buffer(szData, uSize), senderEndpoint));
+		ptData, senderEndpoint));
 }
 
-void UdpMonitor::As_Broadcast( const boost::asio::mutable_buffers_1& buffer,
+void UdpMonitor::As_Broadcast( const std::tr1::shared_ptr<std::stringstream>& ptData,
 	const boost::asio::ip::udp::endpoint& point )
 {
-	char* szData = boost::asio::buffer_cast<char*>(buffer);
-	std::size_t uSize = boost::asio::buffer_size(buffer);
+	const std::string strBuf = ptData->str();
+	const char* szData = strBuf.c_str();
+	std::size_t uSize = strBuf.size();
 	assert(uSize < SPLIT_SIZE);
 	UdpPacket* pData = m_pImpl->mopPackPool.New();
 	if (pData == NULL)

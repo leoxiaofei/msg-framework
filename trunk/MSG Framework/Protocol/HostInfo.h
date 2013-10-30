@@ -22,10 +22,9 @@ class HostInfo
 {
 public:
 	unsigned int   uHostId;
-	std::string    strIp;
 	unsigned short uPort;
+	std::string    strIp;
 	UserInfo       userInfo;
-
 };
 
 #endif // HOSTINFO_H__
