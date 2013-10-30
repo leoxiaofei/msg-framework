@@ -85,6 +85,7 @@
     <ClInclude Include="Protocol\HostInfo.h" />
     <ClInclude Include="Protocol\HostManager.h" />
     <ClInclude Include="Protocol\ProtocolBase.h" />
+    <ClInclude Include="Protocol\sendsignals.h" />
     <ClInclude Include="Socket\rcvdtcppacket.h" />
     <ClInclude Include="Socket\rcvdudppacket.h" />
     <ClInclude Include="Socket\tcpmonitor.h" />
@@ -106,6 +107,7 @@
     <ClCompile Include="ProtocolService.cpp" />
     <ClCompile Include="Protocol\Dispatcher.cpp" />
     <ClCompile Include="Protocol\HostManager.cpp" />
+    <ClCompile Include="Protocol\sendsignals.cpp" />
     <ClCompile Include="Socket\tcpmonitor.cpp" />
     <ClCompile Include="Socket\tcpsession.cpp" />
     <ClCompile Include="Socket\udpmonitor.cpp" />

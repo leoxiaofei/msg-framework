@@ -108,7 +108,7 @@ void TcpMonitor::AssociateSession(
 	m_pImpl->hsSession[strDes] = ptSession;
 }
 
-void TcpMonitor::SendTo( unsigned int uOrder, void* szData, unsigned int uSize,
+void TcpMonitor::SendTo( unsigned int uOrder, const std::tr1::shared_ptr<std::stringstream>& ptData,
 	const std::string& strAddr, unsigned short uPort /*= 5123*/ )
 {
 	ip::tcp::endpoint senderEndpoint(ip::address_v4::from_string(strAddr), uPort);
@@ -118,6 +118,9 @@ void TcpMonitor::SendTo( unsigned int uOrder, void* szData, unsigned int uSize,
 	HsSession::iterator iFind = m_pImpl->hsSession.find(strDes);
 	if(iFind != m_pImpl->hsSession.end())
 	{
+		const std::string strBuf = ptData->str();
+		const char* szData = strBuf.c_str();
+		std::size_t uSize = strBuf.size();
 		iFind->second->SendData(uOrder, szData, uSize);
 	}
 

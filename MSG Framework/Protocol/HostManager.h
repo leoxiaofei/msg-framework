@@ -2,6 +2,8 @@
 #define HOSTMANAGER_H__
 
 #include <memory>
+#include <unordered_map>
+#include <string>
 
 class HostInfo;
 
@@ -15,12 +17,15 @@ public:
 		return theSingleton;
 	}
 
-	unsigned int NewHost(const std::string& strIp, unsigned short uPort);
-	HostInfo* FindHost(const std::string& strIp, unsigned short uPort);
 	HostInfo* FindHost(unsigned int uHostId);
-
 	void DeleteHost(unsigned int uHostId);
-	void DeleteHost(const std::string& strIp, unsigned short uPort);
+
+	enum TransType{TT_UDP, TT_TCP, TT_TOTAL};
+	HostInfo* FindHost(const std::string& strIp, unsigned short uPort, TransType eType);
+	unsigned int NewHost(const std::string& strIp, unsigned short uPort, TransType eType);
+	void DeleteHost(const std::string& strIp, unsigned short uPort, TransType eType);
+
+	static TransType GetHostType(const HostInfo* pHostInfo);
 
 protected:
 	void AddHost(HostInfo* pHostInfo);

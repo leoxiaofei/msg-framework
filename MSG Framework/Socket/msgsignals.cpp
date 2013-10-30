@@ -23,7 +23,7 @@ MsgSignals::~MsgSignals()
 }
 
 void MsgSignals::EmitReceive( const std::string& strAddr, 
-	unsigned int uPort, std::tr1::shared_ptr<std::stringstream> ptData )
+	unsigned int uPort, const std::tr1::shared_ptr<std::stringstream>& ptData )
 {
 	m_pImpl->sigReceive(strAddr, uPort, ptData);
 
