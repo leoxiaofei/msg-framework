@@ -2,16 +2,19 @@
 
 #include "Dispatcher.h"
 #include <boost/bind.hpp>
+#include <sstream>
 #include "HostManager.h"
 #include "HostInfo.h"
-#include "sendsignals.h"
+#include "socketsignals.h"
+#include "appsignals.h"
 
 class Dispatcher::Impl
 {
 public:
 	Impl(boost::asio::io_service& ios):iosWork(ios){}
 	boost::asio::io_service& iosWork;
-	SendSignals sendSignals;
+	SocketSignals sendSignals;
+	AppSignals    appSignals;
 };
 
 Dispatcher::Dispatcher(boost::asio::io_service& ios)
@@ -25,10 +28,27 @@ Dispatcher::~Dispatcher()
 
 }
 
-bool Dispatcher::SendData( unsigned int uHostId, unsigned int uOrder, 
+SocketSignals* Dispatcher::GetSocketSignals()
+{
+	return &m_pImpl->sendSignals;
+}
+
+AppSignals* Dispatcher::GetAppSignals()
+{
+	return &m_pImpl->appSignals;
+}
+
+unsigned int Dispatcher::SendData( unsigned int uHostId, std::tr1::shared_ptr<std::stringstream> ptData )
+{
+	static unsigned int uOrder(0);
+	m_pImpl->iosWork.post(boost::bind(&Dispatcher::As_SendData, this,
+		uHostId, ++uOrder, ptData));
+	return uOrder;
+}
+
+void Dispatcher::As_SendData( unsigned int uHostId, unsigned int uOrder, 
 	std::tr1::shared_ptr<std::stringstream> ptData )
 {
-	bool bRet(false);
 	HostInfo* pHostInfo = HostManager::Instance().FindHost(uHostId);
 	if (pHostInfo)
 	{
@@ -36,23 +56,20 @@ bool Dispatcher::SendData( unsigned int uHostId, unsigned int uOrder,
 		{
 		case HostManager::TT_UDP:
 			m_pImpl->sendSignals.EmitSendUdp(uOrder, ptData, pHostInfo->strIp, pHostInfo->uPort);
-			bRet = true;
 			break;
 		case HostManager::TT_TCP:
 			m_pImpl->sendSignals.EmitSendTcp(uOrder, ptData, pHostInfo->strIp, pHostInfo->uPort);
-			bRet = true;
 			break;
 		default:
 			break;
 		}
 	}
-	return bRet;
+	/// TODO:如果没有找到，报错
 }
 
-bool Dispatcher::BroadcastData( std::tr1::shared_ptr<std::stringstream> ptData )
+void Dispatcher::BroadcastData( std::tr1::shared_ptr<std::stringstream> ptData )
 {
-	m_pImpl->sendSignals.EmitBroadcast(ptData);
-	return true;
+	m_pImpl->iosWork.post(boost::bind(&Dispatcher::As_BroadcastData, this, ptData));
 }
 
 void Dispatcher::ReceiveUdpData( const std::string& strAddr, 
@@ -66,14 +83,10 @@ void Dispatcher::As_RecUdpData( const std::string& strAddr, unsigned int uPort,
 	std::tr1::shared_ptr<std::stringstream> ptData )
 {
 	///分析来源
-	HostInfo* pHostInfo = HostManager::Instance().FindHost(strAddr, uPort, HostManager::TT_UDP);
-	if (pHostInfo == NULL)
-	{
-		unsigned int uHostId = HostManager::Instance().NewHost(strAddr, uPort, HostManager::TT_UDP);
-		pHostInfo = HostManager::Instance().FindHost(uHostId);
-	}
+	HostInfo* pHostInfo = TakeHostInfo(strAddr, uPort, HostManager::TT_UDP);
 	///解析包
-
+	std::string strTemp = ptData->str();
+	std::cout<<strTemp.size()<<std::endl;
 	///上传
 }
 
@@ -87,26 +100,78 @@ void Dispatcher::ReceiveTcpData( const std::string& strAddr, unsigned int uPort,
 void Dispatcher::As_RecTcpData( const std::string& strAddr, unsigned int uPort,
 	std::tr1::shared_ptr<std::stringstream> ptData )
 {
-	HostInfo* pHostInfo = HostManager::Instance().FindHost(strAddr, uPort, HostManager::TT_TCP);
-	if (pHostInfo == NULL)
+	HostInfo* pHostInfo = TakeHostInfo(strAddr, uPort, HostManager::TT_TCP);
+
+	std::string strTemp = ptData->str();
+	std::cout<<strTemp.size()<<std::endl;
+}
+
+void Dispatcher::TcpConnect( const std::string& strIp, unsigned short uPort )
+{
+	m_pImpl->iosWork.post(boost::bind(&Dispatcher::As_StartConnect, this,
+		strIp, uPort, HostManager::TT_TCP));
+}
+
+void Dispatcher::UdpConnect( const std::string& strIp, unsigned short uPort )
+{
+	m_pImpl->iosWork.post(boost::bind(&Dispatcher::As_StartConnect, this,
+		strIp, uPort, HostManager::TT_UDP));
+}
+
+void Dispatcher::TcpConResult( const std::string& strAddr, unsigned int uPort, bool bSuccess )
+{
+	unsigned int uHostId(0);
+	if (bSuccess)
 	{
-		unsigned int uHostId = HostManager::Instance().NewHost(strAddr, uPort, HostManager::TT_TCP);
-		pHostInfo = HostManager::Instance().FindHost(uHostId);
+		HostInfo* pHostInfo = TakeHostInfo(strAddr, uPort, HostManager::TT_TCP);
+		uHostId = pHostInfo->uHostId;
+	}
+	m_pImpl->appSignals.EmitConResult(strAddr, uPort, uHostId);
+}
+
+void Dispatcher::UdpConResult( const std::string& strAddr, unsigned int uPort, bool bSuccess )
+{
+	unsigned int uHostId(0);
+	if (bSuccess)
+	{
+		HostInfo* pHostInfo = TakeHostInfo(strAddr, uPort, HostManager::TT_UDP);
+		uHostId = pHostInfo->uHostId;
+	}
+	m_pImpl->appSignals.EmitConResult(strAddr, uPort, uHostId);
+}
+
+void Dispatcher::As_StartConnect( const std::string& strIp, unsigned short uPort, int eType )
+{
+	switch(eType)
+	{
+	case HostManager::TT_TCP:
+		{
+			m_pImpl->sendSignals.EmitTcpConnect(strIp, uPort);
+		}
+		break;
+	case HostManager::TT_UDP:
+		{
+
+		}
+		break;
+	default:
+		break;
 	}
 }
 
-SendSignals* Dispatcher::GetSignals()
+void Dispatcher::As_BroadcastData( std::tr1::shared_ptr<std::stringstream> ptData )
 {
-	return &m_pImpl->sendSignals;
+	m_pImpl->sendSignals.EmitBroadcast(ptData);
 }
 
-unsigned int Dispatcher::UdpConnect( const std::string& strIp, unsigned short uPort )
+HostInfo* Dispatcher::TakeHostInfo( const std::string& strAddr, unsigned int uPort, int eType )
 {
-	return 0;
+	HostInfo* pHostInfo = HostManager::Instance().FindHost(strAddr, uPort, HostManager::TT_TCP);
+	if (pHostInfo == NULL)
+	{
+		pHostInfo = HostManager::Instance().NewHost(strAddr, uPort, HostManager::TT_TCP);
+	}
+	return pHostInfo;
 }
 
-unsigned int Dispatcher::TcpConnect( const std::string& strIp, unsigned short uPort )
-{
-	return 0;
-}
 

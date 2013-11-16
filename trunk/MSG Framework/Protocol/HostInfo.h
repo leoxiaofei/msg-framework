@@ -8,6 +8,9 @@ public:
 	unsigned int uCpuId;
 	std::string  strComputerName;
 	std::string  strUserName;
+	unsigned int uLastConfigTime;
+	unsigned short uVersion;
+	std::vector<unsigned short> vecProtDisp;
 
 	template <typename Archive>
 	void serialize(Archive& ar, const unsigned int version)
@@ -15,6 +18,9 @@ public:
 		ar & uCpuId;
 		ar & strComputerName;
 		ar & strUserName;
+		ar & uLastConfigTime;
+		ar & uVersion;
+		ar & vecProtDisp;
 	}
 };
 

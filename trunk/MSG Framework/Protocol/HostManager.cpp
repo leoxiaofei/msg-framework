@@ -16,6 +16,7 @@ typedef std::map<unsigned int, HostInfo*>               MapIdHost;
 class HostManager::Impl
 {
 public:
+	Impl():icHost(0){}
 	MsgObjectPool<HostInfo> mopHostPool;
 	HsIpHost hsIpHost[TT_TOTAL];
 	MapIdHost mapIdHost;
@@ -23,6 +24,7 @@ public:
 };
 
 HostManager::HostManager()
+: m_pImpl(new Impl)
 {
 
 }
@@ -46,10 +48,7 @@ HostInfo* HostManager::FindHost( unsigned int uHostId )
 HostInfo* HostManager::FindHost( const std::string& strIp, unsigned short uPort, TransType eType )
 {
 	HostInfo* pRet(NULL);
-	std::string strTemp;
-	std::stringstream ss;
-	ss<<strIp<<uPort;
-	ss>>strTemp;
+	std::string strTemp = GetHsDesc(strIp, uPort);
 	HsIpHost::iterator iFind = m_pImpl->hsIpHost[eType].find(strTemp);
 	if (iFind != m_pImpl->hsIpHost[eType].end())
 	{
@@ -60,10 +59,7 @@ HostInfo* HostManager::FindHost( const std::string& strIp, unsigned short uPort,
 
 void HostManager::AddHost( HostInfo* pHostInfo )
 {
-	std::string strTemp;
-	std::stringstream ss;
-	ss<<pHostInfo->strIp<<pHostInfo->uPort;
-	ss>>strTemp;
+	std::string strTemp = GetHsDesc(pHostInfo->strIp, pHostInfo->uPort);
 	m_pImpl->hsIpHost[GetHostType(pHostInfo)][strTemp] = pHostInfo;
 	m_pImpl->mapIdHost[pHostInfo->uHostId] = pHostInfo;
 }
@@ -71,10 +67,7 @@ void HostManager::AddHost( HostInfo* pHostInfo )
 
 void HostManager::RemoveHost( const HostInfo* pHostInfo )
 {
-	std::string strTemp;
-	std::stringstream ss;
-	ss<<pHostInfo->strIp<<pHostInfo->uPort;
-	ss>>strTemp;
+	std::string strTemp = GetHsDesc(pHostInfo->strIp, pHostInfo->uPort);
 	m_pImpl->hsIpHost[GetHostType(pHostInfo)].erase(strTemp);
 	m_pImpl->mapIdHost.erase(pHostInfo->uHostId);
 }
@@ -99,7 +92,7 @@ void HostManager::DeleteHost( const std::string& strIp, unsigned short uPort, Tr
 	}
 }
 
-unsigned int HostManager::NewHost( const std::string& strIp, unsigned short uPort, TransType eType )
+HostInfo* HostManager::NewHost( const std::string& strIp, unsigned short uPort, TransType eType )
 {
 	HostInfo* pHostInfo = m_pImpl->mopHostPool.New();
 	if (pHostInfo == NULL)
@@ -114,12 +107,21 @@ unsigned int HostManager::NewHost( const std::string& strIp, unsigned short uPor
 		pHostInfo->uHostId |= 0x80000000;
 	}
 	AddHost(pHostInfo);
-	return pHostInfo->uHostId;
+	return pHostInfo;
 }
 
 HostManager::TransType HostManager::GetHostType( const HostInfo* pHostInfo )
 {
 	return (pHostInfo->uHostId & 0x80000000) ? TT_TCP : TT_UDP;
+}
+
+std::string HostManager::GetHsDesc( const std::string& strIp, unsigned short uPort )
+{
+	std::string strTemp;
+	std::stringstream ss;
+	ss<<strIp<<":"<<uPort;
+	ss>>strTemp;
+	return strTemp;
 }
 
 // unsigned int HostManager::NewHost( const std::string& strIp, unsigned short uPort )
