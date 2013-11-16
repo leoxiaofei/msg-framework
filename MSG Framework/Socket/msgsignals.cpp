@@ -8,7 +8,7 @@ class MsgSignals::Impl
 public:
 	SigReceive sigReceive;
 	SigError   sigError;
-
+	SigConResult sigConResult;
 };
 
 MsgSignals::MsgSignals()
@@ -42,5 +42,15 @@ void MsgSignals::EmitSendError( unsigned int uOrder, unsigned int uErrorFlag )
 void MsgSignals::ConnectSendError( const SlotError& pFunc )
 {
 	m_pImpl->sigError.connect(pFunc);
+}
+
+void MsgSignals::ConnectConResult( const SlotConResult& pFunc )
+{
+	m_pImpl->sigConResult.connect(pFunc);
+}
+
+void MsgSignals::EmitConResult( const std::string& strAddr, unsigned int uPort, bool bSuccess )
+{
+	m_pImpl->sigConResult(strAddr, uPort, bSuccess);
 }
 

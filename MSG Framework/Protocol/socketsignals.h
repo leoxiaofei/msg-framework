@@ -5,12 +5,12 @@
 #include <boost/signals2/signal.hpp>
 #include <memory>
 
-class SendSignals
+class SocketSignals
 {
 	class Impl;
 public:
-	SendSignals();
-	~SendSignals();
+	SocketSignals();
+	~SocketSignals();
 
 	typedef boost::signals2::signal<void(unsigned int, 
 		const std::tr1::shared_ptr<std::stringstream>& ,
@@ -25,12 +25,18 @@ public:
 	void EmitSendTcp(unsigned int uOrder, const std::tr1::shared_ptr<std::stringstream>& ptData,
 		const std::string& strAddr, unsigned short uPort);
 
-
 	typedef boost::signals2::signal<void(const std::tr1::shared_ptr<std::stringstream>&)> SigBroadcast;
 	typedef SigBroadcast::slot_type SlotBroadcast;
 
 	void ConnectBroadcast(const SlotBroadcast& pFunc);
 	void EmitBroadcast(const std::tr1::shared_ptr<std::stringstream>& ptData);
+
+
+	typedef boost::signals2::signal<void(const std::string&, 
+		unsigned short)> SigConnect;
+	typedef SigConnect::slot_type SlotConnect;
+	void ConnectTcpConnect(const SlotConnect& pFunc);
+	void EmitTcpConnect(const std::string& strIp, unsigned short uPort);
 
 private:
 	std::tr1::shared_ptr<Impl> m_pImpl;

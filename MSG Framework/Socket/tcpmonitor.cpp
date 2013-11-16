@@ -36,7 +36,6 @@ public:
 TcpMonitor::TcpMonitor(io_service& io)
 : m_pImpl(new Impl(io))
 {
-	Listen();
 }
 
 TcpMonitor::~TcpMonitor()
@@ -88,6 +87,7 @@ void TcpMonitor::ConnectHandler( const boost::system::error_code& ec,
 {
 	if(ec)
 	{
+		m_pImpl->tcpSig.EmitConResult(ptEndPoint->address().to_string(), ptEndPoint->port(), false);
 		return;
 	}
 
@@ -106,6 +106,8 @@ void TcpMonitor::AssociateSession(
 	std::string strDes;
 	GetEpDesc(epReceive, strDes);
 	m_pImpl->hsSession[strDes] = ptSession;
+	m_pImpl->tcpSig.EmitConResult(epReceive.address().to_string(), epReceive.port(), true);
+
 }
 
 void TcpMonitor::SendTo( unsigned int uOrder, const std::tr1::shared_ptr<std::stringstream>& ptData,
