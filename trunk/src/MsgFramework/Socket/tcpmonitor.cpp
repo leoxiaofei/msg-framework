@@ -43,7 +43,7 @@ TcpMonitor::~TcpMonitor()
 
 }
 
-bool TcpMonitor::Listen( unsigned short sPort /*= 5123*/ )
+bool TcpMonitor::Listen( unsigned short sPort )
 {
 	m_pImpl->ptAcceptor = shared_ptr<ip::tcp::acceptor>(new ip::tcp::acceptor(
 		m_pImpl->ios, ip::tcp::endpoint(ip::tcp::v4(), sPort)));
@@ -73,7 +73,7 @@ void TcpMonitor::AcceptHandler( const boost::system::error_code& ec,
 }
 
 void TcpMonitor::Connect( const std::string& strAddr, 
-	unsigned short sPort /*= 5123*/ )
+	unsigned short sPort )
 {
 	shared_ptr<ip::tcp::socket> ptSock(new ip::tcp::socket(m_pImpl->ios));
 	shared_ptr<ip::tcp::endpoint> ptEndPoint(new ip::tcp::endpoint(ip::address::from_string(strAddr), sPort));
@@ -111,7 +111,7 @@ void TcpMonitor::AssociateSession(
 }
 
 void TcpMonitor::SendTo( unsigned int uOrder, const std::tr1::shared_ptr<std::stringstream>& ptData,
-	const std::string& strAddr, unsigned short uPort /*= 5123*/ )
+	const std::string& strAddr, unsigned short uPort )
 {
 	ip::tcp::endpoint senderEndpoint(ip::address_v4::from_string(strAddr), uPort);
 	std::string strDes;

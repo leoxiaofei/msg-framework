@@ -3,7 +3,7 @@
 
 #include <boost/asio.hpp>
 #include <boost/thread/thread.hpp>
-#include "Protocol/Dispatcher.h"
+#include "../Protocol/Dispatcher.h"
 
 class ProtocolService::Impl
 {

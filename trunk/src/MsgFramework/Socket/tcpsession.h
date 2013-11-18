@@ -2,6 +2,7 @@
 #define TCPSESSION_H__
 
 #include <boost/asio/ip/tcp.hpp>
+#include <boost/function.hpp>
 
 template <class T>
 class MsgObjectPool;
