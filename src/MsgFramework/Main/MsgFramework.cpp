@@ -6,14 +6,15 @@
 #include "MsgFramework.h"
 #include "MsgService.h"
 
-#include "Socket/tcpmonitor.h"
-#include "Socket/udpmonitor.h"
+#include "../Socket/tcpmonitor.h"
+#include "../Socket/udpmonitor.h"
+#include "../Protocol/Dispatcher.h"
+#include "../Socket/msgsignals.h"
+#include "../Protocol/socketsignals.h"
+#include "ProtocolService.h"
 
 #include <windows.h>
-#include "ProtocolService.h"
-#include "Protocol/Dispatcher.h"
-#include "Socket/msgsignals.h"
-#include "Protocol/socketsignals.h"
+#include "../Socket/constant.h"
 
 char* sz = 
 	"Welcome to the Boost C++ Libraries\n"
@@ -141,10 +142,10 @@ int MsgFrameMain( int argc, _TCHAR* argv[] )
 	MsgService msg;
 
 	UdpMonitor* udp = msg.GetUdp();
-	udp->Listen();
+	udp->Listen(MSG_SOCKET_PORT);
 
 	TcpMonitor* tcp = msg.GetTcp();
-	tcp->Listen();
+	tcp->Listen(MSG_SOCKET_PORT);
 
 	ProtocolService protocol;
 	Dispatcher* dispatcher = protocol.GetDispatcher();
@@ -157,7 +158,7 @@ int MsgFrameMain( int argc, _TCHAR* argv[] )
 		dispatcher, _1, _2, _3));
 
 	dispatcher->GetSocketSignals()->ConnectBroadcast(boost::bind(&UdpMonitor::Broadcast, 
-		udp, _1, 5123));
+		udp, _1, MSG_SOCKET_PORT));
 	dispatcher->GetSocketSignals()->ConnectSendUdp(boost::bind(&UdpMonitor::SendTo, 
 		udp, _1, _2, _3, _4));
 	dispatcher->GetSocketSignals()->ConnectSendTcp(boost::bind(&TcpMonitor::SendTo, 
@@ -167,12 +168,12 @@ int MsgFrameMain( int argc, _TCHAR* argv[] )
 
 	Sleep(5000);
 
-	//unsigned int uHostId = dispatcher->TcpConnect("127.0.0.1", 5123);
- //	Sleep(5000);
-	//std::tr1::shared_ptr<std::stringstream> ptData(new std::stringstream);
-	//(*ptData)<<sz;
-	//dispatcher->SendData(uHostId, ptData);
-	//Sleep(5000);
+// 	unsigned int uHostId = dispatcher->TcpConnect("127.0.0.1", 5123);
+//  	Sleep(5000);
+// 	std::tr1::shared_ptr<std::stringstream> ptData(new std::stringstream);
+// 	(*ptData)<<sz;
+// 	dispatcher->SendData(uHostId, ptData);
+// 	Sleep(5000);
 
 	//uHostId = dispatcher->UdpConnect("127.0.0.1", 5123);
 	//dispatcher->SendData(uHostId, ptData);

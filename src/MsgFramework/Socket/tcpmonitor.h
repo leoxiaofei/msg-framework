@@ -15,12 +15,12 @@ public:
 	TcpMonitor(boost::asio::io_service& io);
 	~TcpMonitor();
 
-	bool Listen(unsigned short sPort = 5123);
+	bool Listen(unsigned short sPort);
 	
-	void Connect(const std::string& strAddr, unsigned short sPort = 5123);
+	void Connect(const std::string& strAddr, unsigned short sPort);
 
 	void SendTo(unsigned int uOrder, const std::tr1::shared_ptr<std::stringstream>& ptData,
-		const std::string& strAddr, unsigned short uPort = 5123);
+		const std::string& strAddr, unsigned short uPort);
 
 	MsgSignals* GetSignals() const;
 

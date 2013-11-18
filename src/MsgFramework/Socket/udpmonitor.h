@@ -21,11 +21,11 @@ public:
 	UdpMonitor(boost::asio::io_service& io);
 	~UdpMonitor(void);
 
-	bool Listen(unsigned short sPort = 5123);
+	bool Listen(unsigned short sPort);
 
-	void Broadcast(const std::tr1::shared_ptr<std::stringstream>& ptData, unsigned short uPort = 5123);
+	void Broadcast(const std::tr1::shared_ptr<std::stringstream>& ptData, unsigned short uPort);
 	void SendTo(unsigned int uOrder, const std::tr1::shared_ptr<std::stringstream>& ptData,
-		const std::string& strAddr, unsigned short uPort = 5123);
+		const std::string& strAddr, unsigned short uPort);
 
 	MsgSignals* GetSignals();
 

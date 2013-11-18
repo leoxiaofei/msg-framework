@@ -1,10 +1,13 @@
-#ifndef HOSTINFO_H__
-#define HOSTINFO_H__
+#ifndef USERINFO_H__
+#define USERINFO_H__
+
+#include <string>
+#include <vector>
 
 class UserInfo
 {
 public:
-	UserInfo():uCpuId(0){}
+	UserInfo() :uCpuId(0){}
 	unsigned int uCpuId;
 	std::string  strComputerName;
 	std::string  strUserName;
@@ -24,13 +27,4 @@ public:
 	}
 };
 
-class HostInfo
-{
-public:
-	unsigned int   uHostId;
-	unsigned short uPort;
-	std::string    strIp;
-	UserInfo       userInfo;
-};
-
-#endif // HOSTINFO_H__
+#endif // USERINFO_H__

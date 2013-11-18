@@ -2,6 +2,7 @@
 #define UDPSESSION_H__
 
 #include <boost/asio/ip/udp.hpp>
+#include <boost/function.hpp>
 #include <queue>
 
 

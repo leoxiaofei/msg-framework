@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 #include "MsgService.h"
 
-#include "Socket/tcpmonitor.h"
-#include "Socket/udpmonitor.h"
+#include "../Socket/tcpmonitor.h"
+#include "../Socket/udpmonitor.h"
 
 #include <boost/asio.hpp>
 #include <boost/thread/thread.hpp>
