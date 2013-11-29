@@ -84,6 +84,15 @@
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\ProtSet.cpp">
       <Filter>Source Files\Protocol</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\ProtManager.cpp">
+      <Filter>Source Files\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\DispZlib.cpp">
+      <Filter>Source Files\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\DispXor.cpp">
+      <Filter>Source Files\Protocol</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\MsgFramework\Main\MsgService.h">
@@ -162,6 +171,15 @@
       <Filter>Header Files\Protocol</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\UserInfo.h">
+      <Filter>Header Files\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\ProtManager.h">
+      <Filter>Header Files\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\DispZlib.h">
+      <Filter>Header Files\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\DispXor.h">
       <Filter>Header Files\Protocol</Filter>
     </ClInclude>
   </ItemGroup>

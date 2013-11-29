@@ -15,6 +15,7 @@
 
 #include <windows.h>
 #include "../Socket/constant.h"
+#include "../Protocol/DispZlib.h"
 
 char* sz = 
 	"Welcome to the Boost C++ Libraries\n"
@@ -111,8 +112,29 @@ char* sz =
 
 int MsgFrameMain( int argc, _TCHAR* argv[] )
 {
-// 	std::stringstream stream;
-// 	std::string str;
+
+//  	std::stringstream stream;
+// 
+// 	stream << str;
+// 	stream.clear();
+// 	stream.seekg(0);
+// 	stream.seekp(0);
+// 	char szXor = 111;
+// 	char sz;
+// 	while (stream >> sz)
+// 	{
+// 		stream << (char)(sz ^ szXor);
+// 	}
+// 	str = stream.str();
+// 	stream.clear();
+// 	stream.seekg(0);
+// 	stream.seekp(0);
+// 	while (stream >> sz)
+// 	{
+// 		stream << (char)(sz ^ szXor);
+// 	}
+// 	str = stream.str();
+
 // 	int first, second;
 // 	while(1)
 // 	{   
@@ -135,9 +157,10 @@ int MsgFrameMain( int argc, _TCHAR* argv[] )
 // 		system("PAUSE");
 // 	}
 
-	system("PAUSE");
-	return EXIT_SUCCESS;
-
+// 	system("PAUSE");
+// 	return EXIT_SUCCESS;
+	
+	std::srand(static_cast<unsigned int>(time(0)));
 
 	MsgService msg;
 
