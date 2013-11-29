@@ -17,7 +17,10 @@
     <ClCompile Include="..\..\..\src\MsgFramework\Main\ProtocolService.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\appsignals.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Dispatcher.cpp" />
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\DispXor.cpp" />
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\DispZlib.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\HostManager.cpp" />
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\ProtManager.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\ProtSet.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\socketsignals.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Socket\msgsignals.cpp" />
@@ -36,8 +39,11 @@
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Agreement.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\appsignals.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Dispatcher.h" />
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\DispXor.h" />
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\DispZlib.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\HostInfo.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\HostManager.h" />
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\ProtManager.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\ProtocolBase.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\ProtSet.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\socketsignals.h" />
