@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "DispZlib.h"
+#include "Agreement.h"
 
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/iostreams/filter/zlib.hpp>
@@ -39,5 +40,10 @@ bool DispZlib::ReceiveData(std::tr1::shared_ptr<std::stringstream>& ptStream)
 	ptStream = ptNew;
 
 	return true;
+}
+
+int DispZlib::GetType()
+{
+	return Agreement::PD_ZLIB;
 }
 

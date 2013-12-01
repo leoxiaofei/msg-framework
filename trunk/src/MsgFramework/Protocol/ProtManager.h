@@ -18,10 +18,11 @@ public:
 		return theSingleton;
 	}
 
-	void SetLocalProtocol(const std::vector<int>& vecProt);
+	void SetLocalProtocol(const std::vector<unsigned short>& vecProt);
+	void GetSendProtocol(std::vector<unsigned short>& vecProt) const;
 
-	std::tr1::shared_ptr<ProtocolBase> GetProtocol(int nType);
-	void GetLoacalProtocal(int nDesVersion, ProtCont& contProt);
+	void GetLoacalProtocal(unsigned short nDesVersion, ProtCont& contProt);
+	void GetRemoteProtocal(const std::vector<unsigned short>& vecProt, ProtCont& contProt);
 
 private:
 	ProtManager();

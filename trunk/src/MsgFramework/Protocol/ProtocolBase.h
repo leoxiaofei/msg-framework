@@ -9,6 +9,7 @@ public:
 	virtual ~ProtocolBase(){};
 	virtual bool SendData(std::tr1::shared_ptr<std::stringstream>& ptStream) = 0;
 	virtual bool ReceiveData(std::tr1::shared_ptr<std::stringstream>& ptStream) = 0;
+	virtual int GetType() = 0;
 
 	virtual bool NeedReady() { return false; };
 	virtual void GetReadyData(std::stringstream& ptStream) {};

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "DispXor.h"
+#include "Agreement.h"
 
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
@@ -84,3 +85,10 @@ void DispXor::ReadyData()
 {
 	m_pImpl->chXor = std::rand() % 200 + 50;
 }
+
+int DispXor::GetType()
+{
+	return Agreement::PD_XOR;
+}
+
+
