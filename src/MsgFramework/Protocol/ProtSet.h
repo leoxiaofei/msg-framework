@@ -12,8 +12,8 @@ public:
 
 	void Prepare(unsigned short uVersion, const std::vector<unsigned short>& vecProtDisp);
 	bool NeedReady();
-	void GetReadyData();///回应请求
-	void SetReadyData();
+	void GetReadyData();  ///回应请求
+	void SetReadyData();  
 
 private:
 	std::tr1::shared_ptr<Impl> m_pImpl;

@@ -14,12 +14,14 @@ public:
 	~DispXor();
 	virtual bool SendData(std::tr1::shared_ptr<std::stringstream>& ptStream);
 	virtual bool ReceiveData(std::tr1::shared_ptr<std::stringstream>& ptStream);
+	virtual int  GetType();
 	virtual bool NeedReady();
 	virtual void GetReadyData(std::stringstream& ptStream);
 	virtual void SetReadyData(std::stringstream& ptStream);
 
 protected:
 	void ReadyData();
+
 
 private:
 	std::tr1::shared_ptr<Impl> m_pImpl;

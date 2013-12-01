@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ProtSet.h"
 #include "ProtocolBase.h"
+#include "ProtManager.h"
 
 typedef std::vector<std::tr1::shared_ptr<ProtocolBase> > ProtCont;
 
@@ -28,9 +29,10 @@ ProtSet::~ProtSet()
 void ProtSet::Prepare(unsigned short uVersion, const std::vector<unsigned short>& vecProtDisp)
 {
 	///uVersion->准备发送器
+	ProtManager::Instance().GetLoacalProtocal(uVersion, m_pImpl->contSender);
 
 	///vecProtDisp->准备接收器
-
+	ProtManager::Instance().GetRemoteProtocal(vecProtDisp, m_pImpl->contReceiver);
 
 }
 
