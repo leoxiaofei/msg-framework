@@ -8,7 +8,7 @@ template<typename T>
 class MsgObjectPool
 {
 public:
-	~MsgObjectPool()
+	virtual ~MsgObjectPool()
 	{
 		Release();
 	}

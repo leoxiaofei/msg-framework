@@ -6,9 +6,9 @@
 class MsgSignals::Impl
 {
 public:
-	SigReceive sigReceive;
-	SigError   sigError;
-	SigConResult sigConResult;
+	SigReceive		sigReceive;
+	SigSendResult	sigSendResult;
+	SigConResult	sigConResult;
 };
 
 MsgSignals::MsgSignals()
@@ -23,7 +23,7 @@ MsgSignals::~MsgSignals()
 }
 
 void MsgSignals::EmitReceive( const std::string& strAddr, 
-	unsigned int uPort, const std::tr1::shared_ptr<std::stringstream>& ptData )
+	unsigned int uPort, std::vector<char>* ptData )
 {
 	m_pImpl->sigReceive(strAddr, uPort, ptData);
 
@@ -34,14 +34,14 @@ void MsgSignals::ConnectReceive( const SlotReceive& pFunc )
 	m_pImpl->sigReceive.connect(pFunc);
 }
 
-void MsgSignals::EmitSendError( unsigned int uOrder, unsigned int uErrorFlag )
+void MsgSignals::EmitSendResult(unsigned int uOrder, int nResultFlag)
 {
-	m_pImpl->sigError(uOrder, uErrorFlag);
+	m_pImpl->sigSendResult(uOrder, nResultFlag);
 }
 
-void MsgSignals::ConnectSendError( const SlotError& pFunc )
+void MsgSignals::ConnectSendResult( const SlotSendResult& pFunc )
 {
-	m_pImpl->sigError.connect(pFunc);
+	m_pImpl->sigSendResult.connect(pFunc);
 }
 
 void MsgSignals::ConnectConResult( const SlotConResult& pFunc )

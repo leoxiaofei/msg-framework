@@ -3,6 +3,7 @@
 #include "tcpsession.h"
 #include "tcppacket.h"
 #include "msgsignals.h"
+#include "../Common/vcpool.h"
 #include "../Tools/MsgObjectPool.hpp"
 
 #include <boost/bind.hpp>
@@ -10,6 +11,8 @@
 #include <boost/asio/placeholders.hpp>
 #include <boost/signals2.hpp>
 #include <unordered_map>
+
+
 
 using namespace boost::asio;
 using namespace boost::signals2;
@@ -101,6 +104,7 @@ void TcpMonitor::AssociateSession(
 	shared_ptr<TcpSession> ptSession(new TcpSession(m_pImpl->ios, m_pImpl->mopPackPool));
 	ptSession->Connected(ptSocket);
 	ptSession->SetReceiveFunc(boost::bind(&TcpMonitor::ReceiveData, this, _1, _2));
+	ptSession->SetResultFunc(boost::bind(&TcpMonitor::SendResult, this, _1, _2));
 
 
 	std::string strDes;
@@ -110,22 +114,20 @@ void TcpMonitor::AssociateSession(
 
 }
 
-void TcpMonitor::SendTo( unsigned int uOrder, const std::tr1::shared_ptr<std::stringstream>& ptData,
-	const std::string& strAddr, unsigned short uPort )
+void TcpMonitor::SendTo( unsigned int uOrder, std::vector<char>* ptData,
+	const boost::asio::ip::tcp::endpoint& senderEndpoint)
 {
-	ip::tcp::endpoint senderEndpoint(ip::address_v4::from_string(strAddr), uPort);
 	std::string strDes;
 	GetEpDesc(senderEndpoint, strDes);
 
 	HsSession::iterator iFind = m_pImpl->hsSession.find(strDes);
 	if(iFind != m_pImpl->hsSession.end())
 	{
-		const std::string strBuf = ptData->str();
-		const char* szData = strBuf.c_str();
-		std::size_t uSize = strBuf.size();
+		const char* szData = ptData->data();
+		std::size_t uSize = ptData->size();
 		iFind->second->SendData(uOrder, szData, uSize);
 	}
-
+	VcPool::Instance().Recycle(ptData);
 }
 
 void TcpMonitor::GetEpDesc( const boost::asio::ip::tcp::endpoint& point, std::string& strDesc )
@@ -135,7 +137,7 @@ void TcpMonitor::GetEpDesc( const boost::asio::ip::tcp::endpoint& point, std::st
 	ss >> strDesc;
 }
 
-void TcpMonitor::ReceiveData( std::tr1::shared_ptr<std::stringstream> ptData, 
+void TcpMonitor::ReceiveData( std::vector<char>* ptData, 
 	const boost::asio::ip::tcp::endpoint& point )
 {
 	m_pImpl->tcpSig.EmitReceive(point.address().to_string(), point.port(), ptData);
@@ -144,5 +146,15 @@ void TcpMonitor::ReceiveData( std::tr1::shared_ptr<std::stringstream> ptData,
 MsgSignals* TcpMonitor::GetSignals() const
 {
 	return &m_pImpl->tcpSig;
+}
+
+boost::asio::io_service& TcpMonitor::GetIOs()
+{
+	return m_pImpl->ios;
+}
+
+void TcpMonitor::SendResult(unsigned int uOrder, int nResultFlag)
+{
+	m_pImpl->tcpSig.EmitSendResult(uOrder, nResultFlag);
 }
 

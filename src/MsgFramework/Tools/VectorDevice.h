@@ -4,11 +4,14 @@
 #include "container_device.hpp"
 #include <vector>
 #include <string>
+#include <boost/iostreams/stream.hpp>
 
 namespace Msg
 {
 	typedef container_device< std::vector<char> > VectorDevice;
 	typedef container_device< std::string >       StringDevice;
+
+	typedef boost::iostreams::stream<VectorDevice> MsgStream;
 }
 
 

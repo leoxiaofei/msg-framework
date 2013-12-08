@@ -2,10 +2,12 @@
 #define DISPATCHER_H__
 
 #include <boost/asio/io_service.hpp>
+#include <boost/function.hpp>
 
 class SocketSignals;
 class AppSignals;
 class HostInfo;
+
 
 class Dispatcher
 {
@@ -15,37 +17,46 @@ public:
 	~Dispatcher();
 
 	SocketSignals* GetSocketSignals();
-	AppSignals* GetAppSignals();
+
+
+	typedef boost::function<unsigned int(unsigned int, unsigned short,
+		std::vector<char>*) > FuncReceive;
+
+	void SetReceiver(const FuncReceive& receiveFunc);
 
 public: ///App调用
-	void UdpConnect(const std::string& strIp, unsigned short uPort);
-	void TcpConnect(const std::string& strIp, unsigned short uPort);
-	void BroadcastData(std::tr1::shared_ptr<std::stringstream> ptData);
-	unsigned int SendData(unsigned int uHostId, std::tr1::shared_ptr<std::stringstream> ptData);
+	void as_UdpConnect(const std::string& strIp, unsigned short uPort);
+	void as_TcpConnect(const std::string& strIp, unsigned short uPort);
+	//void as_BroadcastData(std::vector<char>* ptData);
+	//unsigned int as_SendData(unsigned int uHostId, std::vector<char>* ptData);
 
 protected:
-	void As_StartConnect(const std::string& strIp, unsigned short uPort, int eType);
-	void As_SendData(unsigned int uHostId, unsigned int uOrder, 
-		std::tr1::shared_ptr<std::stringstream> ptData);
-	void As_BroadcastData(std::tr1::shared_ptr<std::stringstream> ptData);
+	void StartConnect(const std::string& strIp, unsigned short uPort, int eType);
+	void SendData(unsigned int uHostId, unsigned int uOrder, unsigned short eActType,
+		std::vector<char>* ptData);
+	void BroadcastData(unsigned short eActType, std::vector<char>* ptData);
 
 public: ///Socket调用
-	void ReceiveUdpData(const std::string& strAddr, unsigned int uPort, 
-		std::tr1::shared_ptr<std::stringstream> ptData);
-	void ReceiveTcpData(const std::string& strAddr, unsigned int uPort, 
-		std::tr1::shared_ptr<std::stringstream> ptData);
-	void TcpConResult(const std::string& strAddr, unsigned int uPort, 
+	void as_ReceiveUdpData(const std::string& strAddr, unsigned int uPort, 
+		std::vector<char>* ptData);
+	void as_ReceiveTcpData(const std::string& strAddr, unsigned int uPort, 
+		std::vector<char>* ptData);
+	void as_TcpConResult(const std::string& strAddr, unsigned int uPort, 
 		bool bSuccess);
-	void UdpConResult(const std::string& strAddr, unsigned int uPort, 
+	void as_UdpConResult(const std::string& strAddr, unsigned int uPort, 
 		bool bSuccess);
 
 protected:
-	void As_RecUdpData(const std::string& strAddr, unsigned int uPort,
-		std::tr1::shared_ptr<std::stringstream> ptData);
-	void As_RecTcpData(const std::string& strAddr, unsigned int uPort,
-		std::tr1::shared_ptr<std::stringstream> ptData);
+	void RecUdpData(const std::string& strAddr, unsigned int uPort,
+		std::vector<char>* ptData);
+	void RecTcpData(const std::string& strAddr, unsigned int uPort,
+		std::vector<char>* ptData);
+
+	void RecData(unsigned int uHostId, std::vector<char>* ptData);
 
 	HostInfo* TakeHostInfo(const std::string& strAddr, unsigned int uPort, int eType);
+
+	boost::asio::io_service& GetIOs();
 
 private:
 	std::tr1::shared_ptr<Impl> m_pImpl;

@@ -37,6 +37,18 @@
     <Filter Include="Source Files\Tools">
       <UniqueIdentifier>{9cf58a3d-3977-4821-aa5a-5493f105d635}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Common">
+      <UniqueIdentifier>{3130848e-fc46-47bf-a092-675f32c811a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Common">
+      <UniqueIdentifier>{6d1ecf12-ce1f-4c0f-97ac-16e289fbca92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Protocol\act">
+      <UniqueIdentifier>{07253f5e-9e52-457b-98ac-e58252354445}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Protocol\act">
+      <UniqueIdentifier>{397322c3-9ace-40ef-be13-ad3ed5ffc66d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\MsgFramework\Main\main.cpp">
@@ -92,6 +104,45 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\DispXor.cpp">
       <Filter>Source Files\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Common\vcpool.cpp">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Socket\udpmonitor_as.cpp">
+      <Filter>Source Files\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Socket\tcpmonitor_as.cpp">
+      <Filter>Source Files\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Dispatcher_as.cpp">
+      <Filter>Source Files\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Actor.cpp">
+      <Filter>Source Files\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActConnect.cpp">
+      <Filter>Source Files\Protocol\act</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActApp.cpp">
+      <Filter>Source Files\Protocol\act</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActCall.cpp">
+      <Filter>Source Files\Protocol\act</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActHere.cpp">
+      <Filter>Source Files\Protocol\act</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActOffline.cpp">
+      <Filter>Source Files\Protocol\act</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActOnline.cpp">
+      <Filter>Source Files\Protocol\act</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActProtReq.cpp">
+      <Filter>Source Files\Protocol\act</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActProtResp.cpp">
+      <Filter>Source Files\Protocol\act</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +232,48 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\DispXor.h">
       <Filter>Header Files\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Tools\container_device.hpp">
+      <Filter>Header Files\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Tools\VectorDevice.h">
+      <Filter>Header Files\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Common\vcpool.h">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Actor.h">
+      <Filter>Header Files\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Actbase.h">
+      <Filter>Header Files\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActConnect.h">
+      <Filter>Header Files\Protocol\act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\Actbase.h">
+      <Filter>Header Files\Protocol\act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActApp.h">
+      <Filter>Header Files\Protocol\act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActCall.h">
+      <Filter>Header Files\Protocol\act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActHere.h">
+      <Filter>Header Files\Protocol\act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActOffline.h">
+      <Filter>Header Files\Protocol\act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActOnline.h">
+      <Filter>Header Files\Protocol\act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActProtReq.h">
+      <Filter>Header Files\Protocol\act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActProtResp.h">
+      <Filter>Header Files\Protocol\act</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

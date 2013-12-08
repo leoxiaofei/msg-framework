@@ -26,7 +26,7 @@ void AppSignals::ConnectReceive( const SlotReceive& pFunc )
 	m_pImpl->sigReceive.connect(pFunc);
 }
 
-void AppSignals::EmitReceive( unsigned int uHostId, const std::tr1::shared_ptr<std::stringstream>& ptData )
+void AppSignals::EmitReceive( unsigned int uHostId, std::vector<char>* ptData )
 {
 	m_pImpl->sigReceive(uHostId, ptData);
 }

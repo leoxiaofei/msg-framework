@@ -7,6 +7,8 @@
 
 
 #include <queue>
+#include "../Common/vcpool.h"
+#include "constant.h"
 
 
 class UdpSession::Impl
@@ -22,6 +24,7 @@ public:
 	boost::asio::ip::udp::endpoint epSend;
 	FuncSend funcSend;
 	FuncReceive funcReceive;
+	FuncResult funcResult;
 };
 
 UdpSession::UdpSession(MsgObjectPool<UdpPacket> &mopPackPool)
@@ -74,8 +77,17 @@ void UdpSession::ReceiveData( const char* szData, std::size_t packet_bytes )
 
 				if (!m_pImpl->quReadyData.empty())
 				{
-					///存在下一个数据
-					m_pImpl->funcSend(m_pImpl->quReadyData.front(), m_pImpl->epSend);
+					///发送下一个数据
+					UdpPacket* pNext = m_pImpl->quReadyData.front();
+					m_pImpl->funcSend(pNext, m_pImpl->epSend);
+					if (pNext->uOrder != pData->uOrder)
+					{
+						m_pImpl->funcResult(pData->uOrder, Constant::RF_SUCCESS);
+					}
+				}
+				else
+				{
+					m_pImpl->funcResult(pData->uOrder, Constant::RF_SUCCESS);
 				}
 			}
 			
@@ -95,7 +107,9 @@ void UdpSession::ReceiveData( const char* szData, std::size_t packet_bytes )
 				RcvdUdpPacket& rPacket = m_pImpl->mapReceiveData[pData->uOrder];
 				rPacket.uCurrent = pData->uCurrent;
 				rPacket.uTotal   = pData->uTotal;
-				rPacket.ptStream->write((char*)pData->szData, pData->uUsed);
+				rPacket.pData = VcPool::Instance().New();
+				rPacket.pData->reserve(pData->uUsed);
+				std::copy(pData->szData, pData->szData + pData->uUsed, std::back_inserter(*rPacket.pData));
 			}
 			else
 			{
@@ -109,7 +123,8 @@ void UdpSession::ReceiveData( const char* szData, std::size_t packet_bytes )
 				{
 					assert(rPacket.uCurrent + 1 == pData->uCurrent);
 					rPacket.uCurrent = pData->uCurrent;
-					rPacket.ptStream->write((char*)pData->szData, pData->uUsed);
+					rPacket.pData->reserve(rPacket.pData->size() + pData->uUsed);
+					std::copy(pData->szData, pData->szData + pData->uUsed, std::back_inserter(*rPacket.pData));
 				}
 			}
 			CheckEmitReceive(pData->uOrder);
@@ -167,7 +182,7 @@ void UdpSession::CheckEmitReceive( unsigned int uOrder )
 		{
 			///TODO:完整收到消息，提交数据
 			//m_pImpl->sigReceiveData(uOrder, rPacket.ptStream);
-			m_pImpl->funcReceive(rPacket.ptStream, m_pImpl->epSend);
+			m_pImpl->funcReceive(rPacket.pData, m_pImpl->epSend);
 			m_pImpl->mapReceiveData.erase(iFind);
 		}
 	}
@@ -221,5 +236,10 @@ void UdpSession::SplitPacket( unsigned int uOrder, const void* szData,
 void UdpSession::SetReceiveFunc( const FuncReceive& pFunc )
 {
 	m_pImpl->funcReceive = pFunc;
+}
+
+void UdpSession::SetResultFunc(const FuncResult& pFunc)
+{
+	m_pImpl->funcResult = pFunc;
 }
 

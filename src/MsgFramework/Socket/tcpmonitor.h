@@ -19,7 +19,7 @@ public:
 	
 	void Connect(const std::string& strAddr, unsigned short sPort);
 
-	void SendTo(unsigned int uOrder, const std::tr1::shared_ptr<std::stringstream>& ptData,
+	void as_SendTo(unsigned int uOrder, std::vector<char>* ptData,
 		const std::string& strAddr, unsigned short uPort);
 
 	MsgSignals* GetSignals() const;
@@ -39,8 +39,17 @@ protected:
 
 	void GetEpDesc(const boost::asio::ip::tcp::endpoint& point, std::string& strDesc);
 
-	void ReceiveData(std::tr1::shared_ptr<std::stringstream> ptData, 
+	void SendTo(unsigned int uOrder, std::vector<char>* ptData,
+		const boost::asio::ip::tcp::endpoint& senderEndpoint);
+
+	void ReceiveData(std::vector<char>* ptData, 
 		const boost::asio::ip::tcp::endpoint& point);
+
+	void SendResult(unsigned int uOrder, int nResultFlag);
+
+
+	boost::asio::io_service& GetIOs();
+
 private:
 	std::tr1::shared_ptr<Impl> m_pImpl;
 };

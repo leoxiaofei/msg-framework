@@ -5,9 +5,9 @@
 class RcvdTcpPacket
 {
 public:
-	unsigned int      uCurrent;
-	unsigned int      uTotal;
-	std::tr1::shared_ptr<std::stringstream> ptStream;
+	unsigned int       uCurrent;
+	unsigned int       uTotal;
+	std::vector<char>* pData;
 };
 
 #endif // RCVDTCPPACKET_H__

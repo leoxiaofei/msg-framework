@@ -5,7 +5,6 @@
 #include <memory>
 #include <queue>
 #include <boost/asio/io_service.hpp>
-#include <boost/signals2.hpp>
 #include <boost/asio/error.hpp>
 #include <boost/asio/buffer.hpp>
 #include <boost/asio/ip/udp.hpp>
@@ -23,8 +22,8 @@ public:
 
 	bool Listen(unsigned short sPort);
 
-	void Broadcast(const std::tr1::shared_ptr<std::stringstream>& ptData, unsigned short uPort);
-	void SendTo(unsigned int uOrder, const std::tr1::shared_ptr<std::stringstream>& ptData,
+	void as_Broadcast(std::vector<char>* ptData, unsigned short uPort);
+	void as_SendTo(unsigned int uOrder, std::vector<char>* ptData,
 		const std::string& strAddr, unsigned short uPort);
 
 	MsgSignals* GetSignals();
@@ -34,24 +33,27 @@ protected:
 	void ReadHandler( const boost::system::error_code& ec, 
 		std::size_t packet_bytes );
 
-	void As_Broadcast(const std::tr1::shared_ptr<std::stringstream>& ptData, 
-		const boost::asio::ip::udp::endpoint& point);
+	void Broadcast(std::vector<char>* ptData, const boost::asio::ip::udp::endpoint& point);
 	void BroadcastPacket(UdpPacket* packet, const boost::asio::ip::udp::endpoint& point);
 	void BroadcastHandler( const boost::system::error_code& ec);
 
-	void As_SendTo(unsigned int uOrder,
-		const std::tr1::shared_ptr<std::stringstream>& ptData, 
+	void SendTo(unsigned int uOrder, std::vector<char>* ptData, 
 		const boost::asio::ip::udp::endpoint& point);
 	void SendPacket(UdpPacket* packet, const boost::asio::ip::udp::endpoint& point);
 	void SendToHandler( const boost::system::error_code& ec);
 
-	void ReceiveData(std::tr1::shared_ptr<std::stringstream> ptData, 
+
+	void SendResult(unsigned int uOrder, int nResultFlag);
+
+	void ReceiveData(std::vector<char>* ptData, 
 		const boost::asio::ip::udp::endpoint& point);
 
 	UdpSession* FindSession(const boost::asio::ip::udp::endpoint& point);
 	UdpSession* CreateSession(const boost::asio::ip::udp::endpoint& point);
 
 	void GetEpDesc(const boost::asio::ip::udp::endpoint& point, std::string& strDesc);
+
+	boost::asio::io_service& GetIOs();
 
 private:
 	std::tr1::shared_ptr<Impl> m_pImpl;

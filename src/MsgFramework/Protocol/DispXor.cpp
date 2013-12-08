@@ -4,7 +4,6 @@
 
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
-#include <sstream>
 
 using boost::archive::binary_oarchive; // saving
 using boost::archive::binary_iarchive; // loading
@@ -33,33 +32,29 @@ DispXor::~DispXor()
 
 }
 
-bool DispXor::SendData(std::tr1::shared_ptr<std::stringstream>& ptStream)
+class XorOp
 {
-	std::stringstream& stream = *ptStream.get();
-	stream.clear();
-	stream.seekg(0);
-	stream.seekp(0);
-	char chXor = m_pImpl->chXor;
-	char chTemp;
-	while (stream >> chTemp)
+public:
+	XorOp(char chXor) : m_chXor(chXor) {}
+
+	char operator()(char ch)
 	{
-		stream << (char)(chTemp ^ chXor);
+		return (char)(ch ^ m_chXor);
 	}
+
+private:
+	char m_chXor;
+};
+
+bool DispXor::SendData(std::vector<char>*& pData)
+{
+	for_each(pData->begin(), pData->end(), XorOp(m_pImpl->chXor));
 	return true;
 }
 
-bool DispXor::ReceiveData(std::tr1::shared_ptr<std::stringstream>& ptStream)
+bool DispXor::ReceiveData(std::vector<char>*& pData)
 {
-	std::stringstream& stream = *ptStream.get();
-	stream.clear();
-	stream.seekg(0);
-	stream.seekp(0);
-	char chXor = m_pImpl->chXor;
-	char chTemp;
-	while (stream >> chTemp)
-	{
-		stream << (char)(chTemp ^ chXor);
-	}
+	for_each(pData->begin(), pData->end(), XorOp(m_pImpl->chXor));
 	return true;
 }
 
@@ -68,16 +63,16 @@ bool DispXor::NeedReady()
 	return true;
 }
 
-void DispXor::GetReadyData(std::stringstream& ptStream)
+void DispXor::GetReadyData(Msg::MsgStream& stream)
 {
 	ReadyData();
-	binary_oarchive oa(ptStream);
+	binary_oarchive oa(stream);
 	oa << *m_pImpl.get();
 }
 
-void DispXor::SetReadyData(std::stringstream& ptStream)
+void DispXor::SetReadyData(Msg::MsgStream& stream)
 {
-	binary_iarchive ia(ptStream);
+	binary_iarchive ia(stream);
 	ia >> *m_pImpl.get();
 }
 

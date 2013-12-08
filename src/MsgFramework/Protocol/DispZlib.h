@@ -7,8 +7,10 @@
 class DispZlib : public ProtocolBase
 {
 public:
-	virtual bool SendData(std::tr1::shared_ptr<std::stringstream>& ptStream);
-	virtual bool ReceiveData(std::tr1::shared_ptr<std::stringstream>& ptStream);
+	virtual bool SendData(std::vector<char>*& pData);
+
+	virtual bool ReceiveData(std::vector<char>*& pData);
+
 	virtual int  GetType();
 
 };

@@ -19,9 +19,13 @@ public:
 	void Connected(std::tr1::shared_ptr<boost::asio::ip::tcp::socket> ptSocket);
 	void SendData(unsigned int uOrder, const char* szData, unsigned int uSize);
 
-	typedef boost::function<void(std::tr1::shared_ptr<std::stringstream>, 
+	typedef boost::function<void(std::vector<char>*, 
 		const boost::asio::ip::tcp::endpoint&)> FuncReceive;
+	typedef boost::function<void(unsigned int, int)> FuncResult;
+
 	void SetReceiveFunc(const FuncReceive& pFunc);
+
+	void SetResultFunc(const FuncResult& pFunc);
 
 protected:
 	void StartReceive();

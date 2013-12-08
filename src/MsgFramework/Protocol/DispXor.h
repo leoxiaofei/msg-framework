@@ -12,12 +12,12 @@ class DispXor : public ProtocolBase
 public:
 	DispXor();
 	~DispXor();
-	virtual bool SendData(std::tr1::shared_ptr<std::stringstream>& ptStream);
-	virtual bool ReceiveData(std::tr1::shared_ptr<std::stringstream>& ptStream);
+	virtual bool SendData(std::vector<char>*& pData);
+	virtual bool ReceiveData(std::vector<char>*& pData);
 	virtual int  GetType();
 	virtual bool NeedReady();
-	virtual void GetReadyData(std::stringstream& ptStream);
-	virtual void SetReadyData(std::stringstream& ptStream);
+	virtual void GetReadyData(Msg::MsgStream& stream);
+	virtual void SetReadyData(Msg::MsgStream& stream);
 
 protected:
 	void ReadyData();
