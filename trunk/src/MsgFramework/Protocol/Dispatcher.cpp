@@ -6,15 +6,18 @@
 #include "HostManager.h"
 #include "HostInfo.h"
 #include "socketsignals.h"
-#include "appsignals.h"
+#include "../Common/vcpool.h"
 
 class Dispatcher::Impl
 {
 public:
-	Impl(boost::asio::io_service& ios):iosWork(ios){}
+	Impl(boost::asio::io_service& ios)
+	: iosWork(ios) {}
+
 	boost::asio::io_service& iosWork;
 	SocketSignals sendSignals;
-	AppSignals    appSignals;
+
+	FuncReceive receiveFunc;
 };
 
 Dispatcher::Dispatcher(boost::asio::io_service& ios)
@@ -33,25 +36,18 @@ SocketSignals* Dispatcher::GetSocketSignals()
 	return &m_pImpl->sendSignals;
 }
 
-AppSignals* Dispatcher::GetAppSignals()
-{
-	return &m_pImpl->appSignals;
-}
 
-unsigned int Dispatcher::SendData( unsigned int uHostId, std::tr1::shared_ptr<std::stringstream> ptData )
-{
-	static unsigned int uOrder(0);
-	m_pImpl->iosWork.post(boost::bind(&Dispatcher::As_SendData, this,
-		uHostId, ++uOrder, ptData));
-	return uOrder;
-}
-
-void Dispatcher::As_SendData( unsigned int uHostId, unsigned int uOrder, 
-	std::tr1::shared_ptr<std::stringstream> ptData )
+void Dispatcher::SendData(unsigned int uHostId, unsigned int uOrder, unsigned short eActType,
+	std::vector<char>* ptData )
 {
 	HostInfo* pHostInfo = HostManager::Instance().FindHost(uHostId);
 	if (pHostInfo)
 	{
+		unsigned int nOffSize = sizeof(eActType);
+		ptData->resize(ptData->size() + nOffSize);
+		std::copy(ptData->begin(), ptData->begin() + nOffSize, ptData->end() - nOffSize);
+		std::copy((char*)&eActType, (char*)&eActType + nOffSize, ptData->begin());
+
 		switch(HostManager::GetHostType(pHostInfo))
 		{
 		case HostManager::TT_UDP:
@@ -61,64 +57,57 @@ void Dispatcher::As_SendData( unsigned int uHostId, unsigned int uOrder,
 			m_pImpl->sendSignals.EmitSendTcp(uOrder, ptData, pHostInfo->strIp, pHostInfo->uPort);
 			break;
 		default:
+			assert(false);
 			break;
 		}
 	}
 	/// TODO:如果没有找到，报错
 }
 
-void Dispatcher::BroadcastData( std::tr1::shared_ptr<std::stringstream> ptData )
-{
-	m_pImpl->iosWork.post(boost::bind(&Dispatcher::As_BroadcastData, this, ptData));
-}
-
-void Dispatcher::ReceiveUdpData( const std::string& strAddr, 
-	unsigned int uPort, std::tr1::shared_ptr<std::stringstream> ptData )
-{
-	m_pImpl->iosWork.post(boost::bind(&Dispatcher::As_RecUdpData, this,
-		strAddr, uPort, ptData));
-}
-
-void Dispatcher::As_RecUdpData( const std::string& strAddr, unsigned int uPort,
-	std::tr1::shared_ptr<std::stringstream> ptData )
+void Dispatcher::RecUdpData( const std::string& strAddr, unsigned int uPort,
+	std::vector<char>* ptData )
 {
 	///分析来源
 	HostInfo* pHostInfo = TakeHostInfo(strAddr, uPort, HostManager::TT_UDP);
 	///解析包
-	std::string strTemp = ptData->str();
-	std::cout<<strTemp.size()<<std::endl;
-	///上传
+	RecData(pHostInfo->uHostId, ptData);
 }
 
-void Dispatcher::ReceiveTcpData( const std::string& strAddr, unsigned int uPort, 
-	std::tr1::shared_ptr<std::stringstream> ptData )
-{
-	m_pImpl->iosWork.post(boost::bind(&Dispatcher::As_RecTcpData, this,
-		strAddr, uPort, ptData));
-}
 
-void Dispatcher::As_RecTcpData( const std::string& strAddr, unsigned int uPort,
-	std::tr1::shared_ptr<std::stringstream> ptData )
+void Dispatcher::RecTcpData( const std::string& strAddr, unsigned int uPort,
+	std::vector<char>* ptData )
 {
+	///分析来源
 	HostInfo* pHostInfo = TakeHostInfo(strAddr, uPort, HostManager::TT_TCP);
-
-	std::string strTemp = ptData->str();
-	std::cout<<strTemp.size()<<std::endl;
+	///解析包
+	RecData(pHostInfo->uHostId, ptData);
 }
 
-void Dispatcher::TcpConnect( const std::string& strIp, unsigned short uPort )
+
+void Dispatcher::RecData(unsigned int uHostId, std::vector<char>* ptData)
 {
-	m_pImpl->iosWork.post(boost::bind(&Dispatcher::As_StartConnect, this,
-		strIp, uPort, HostManager::TT_TCP));
+	unsigned short eActType;
+	unsigned int nOffSize = sizeof(eActType);
+	if (ptData->size() >= nOffSize)
+	{
+		std::copy(ptData->begin(), ptData->begin() + nOffSize, (char*)&eActType);
+		std::copy(ptData->end() - nOffSize, ptData->end(), ptData->begin());
+		ptData->resize(ptData->size() - nOffSize);
+
+		///TODO:上传
+		m_pImpl->receiveFunc(uHostId, eActType, ptData);
+		///
+	}
+	else
+	{
+		///TODO:错误
+	}
+
+	VcPool::Instance().Recycle(ptData);
 }
 
-void Dispatcher::UdpConnect( const std::string& strIp, unsigned short uPort )
-{
-	m_pImpl->iosWork.post(boost::bind(&Dispatcher::As_StartConnect, this,
-		strIp, uPort, HostManager::TT_UDP));
-}
 
-void Dispatcher::TcpConResult( const std::string& strAddr, unsigned int uPort, bool bSuccess )
+void Dispatcher::as_TcpConResult( const std::string& strAddr, unsigned int uPort, bool bSuccess )
 {
 	unsigned int uHostId(0);
 	if (bSuccess)
@@ -126,10 +115,10 @@ void Dispatcher::TcpConResult( const std::string& strAddr, unsigned int uPort, b
 		HostInfo* pHostInfo = TakeHostInfo(strAddr, uPort, HostManager::TT_TCP);
 		uHostId = pHostInfo->uHostId;
 	}
-	m_pImpl->appSignals.EmitConResult(strAddr, uPort, uHostId);
+	//m_pImpl->appSignals.EmitConResult(strAddr, uPort, uHostId);
 }
 
-void Dispatcher::UdpConResult( const std::string& strAddr, unsigned int uPort, bool bSuccess )
+void Dispatcher::as_UdpConResult( const std::string& strAddr, unsigned int uPort, bool bSuccess )
 {
 	unsigned int uHostId(0);
 	if (bSuccess)
@@ -137,10 +126,10 @@ void Dispatcher::UdpConResult( const std::string& strAddr, unsigned int uPort, b
 		HostInfo* pHostInfo = TakeHostInfo(strAddr, uPort, HostManager::TT_UDP);
 		uHostId = pHostInfo->uHostId;
 	}
-	m_pImpl->appSignals.EmitConResult(strAddr, uPort, uHostId);
+	//m_pImpl->appSignals.EmitConResult(strAddr, uPort, uHostId);
 }
 
-void Dispatcher::As_StartConnect( const std::string& strIp, unsigned short uPort, int eType )
+void Dispatcher::StartConnect( const std::string& strIp, unsigned short uPort, int eType )
 {
 	switch(eType)
 	{
@@ -159,8 +148,12 @@ void Dispatcher::As_StartConnect( const std::string& strIp, unsigned short uPort
 	}
 }
 
-void Dispatcher::As_BroadcastData( std::tr1::shared_ptr<std::stringstream> ptData )
+void Dispatcher::BroadcastData(unsigned short eActType, std::vector<char>* ptData)
 {
+	unsigned int nOffSize = sizeof(eActType);
+	ptData->resize(ptData->size() + nOffSize);
+	std::copy(ptData->begin(), ptData->begin() + nOffSize, ptData->end() - nOffSize);
+	std::copy((char*)&eActType, (char*)&eActType + nOffSize, ptData->begin());
 	m_pImpl->sendSignals.EmitBroadcast(ptData);
 }
 
@@ -172,6 +165,16 @@ HostInfo* Dispatcher::TakeHostInfo( const std::string& strAddr, unsigned int uPo
 		pHostInfo = HostManager::Instance().NewHost(strAddr, uPort, HostManager::TT_TCP);
 	}
 	return pHostInfo;
+}
+
+boost::asio::io_service& Dispatcher::GetIOs()
+{
+	return m_pImpl->iosWork;
+}
+
+void Dispatcher::SetReceiver(const FuncReceive& receiveFunc)
+{
+	m_pImpl->receiveFunc = receiveFunc;
 }
 
 

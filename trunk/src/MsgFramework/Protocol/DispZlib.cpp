@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "DispZlib.h"
 #include "Agreement.h"
+#include "../Common/vcpool.h"
 
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/iostreams/filter/zlib.hpp>
@@ -9,35 +10,35 @@
 
 using namespace boost::iostreams;
 
-bool DispZlib::SendData(std::tr1::shared_ptr<std::stringstream>& ptStream)
-{
-// 	ptStream->clear();
-// 	ptStream->seekg(0);
-// 	ptStream->seekp(0);
 
-	std::tr1::shared_ptr<std::stringstream> ptNew(new std::stringstream());
+bool DispZlib::SendData(std::vector<char>*& pData)
+{
+	std::vector<char>* ptNew = VcPool::Instance().New();
+	Msg::MsgStream stmNew(*ptNew);
+
 	filtering_ostream out;
 	out.push(zlib_compressor());
-	out.push(*ptNew);
+	out.push(stmNew);
 
-	boost::iostreams::copy(*ptStream, out);
-	ptStream = ptNew;
+	boost::iostreams::copy(Msg::MsgStream(*pData), out);
+	VcPool::Instance().Recycle(pData);
+	pData = ptNew;
 
 	return true;
 }
 
-bool DispZlib::ReceiveData(std::tr1::shared_ptr<std::stringstream>& ptStream)
-{
-// 	ptStream->clear();
-// 	ptStream->seekg(0);
-// 	ptStream->seekp(0);
 
-	std::tr1::shared_ptr<std::stringstream> ptNew(new std::stringstream());
+bool DispZlib::ReceiveData(std::vector<char>*& pData)
+{
+	std::vector<char>* ptNew = VcPool::Instance().New();
+	Msg::MsgStream stmNew(*ptNew);
+
 	filtering_istream in;
 	in.push(zlib_decompressor());
-	in.push(*ptStream);
-	boost::iostreams::copy(in, *ptNew);
-	ptStream = ptNew;
+	in.push(Msg::MsgStream(*pData));
+	boost::iostreams::copy(in, stmNew);
+	VcPool::Instance().Recycle(pData);
+	pData = ptNew;
 
 	return true;
 }

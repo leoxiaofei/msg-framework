@@ -11,12 +11,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\MsgFramework\Common\vcpool.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Main\main.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Main\MsgFramework.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Main\MsgService.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Main\ProtocolService.cpp" />
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Actor.cpp" />
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActApp.cpp" />
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActCall.cpp" />
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActConnect.cpp" />
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActHere.cpp" />
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActOffline.cpp" />
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActOnline.cpp" />
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActProtReq.cpp" />
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActProtResp.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\appsignals.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Dispatcher.cpp" />
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Dispatcher_as.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\DispXor.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\DispZlib.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\HostManager.cpp" />
@@ -25,17 +36,31 @@
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\socketsignals.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Socket\msgsignals.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Socket\tcpmonitor.cpp" />
+    <ClCompile Include="..\..\..\src\MsgFramework\Socket\tcpmonitor_as.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Socket\tcpsession.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Socket\udpmonitor.cpp" />
+    <ClCompile Include="..\..\..\src\MsgFramework\Socket\udpmonitor_as.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Socket\udpsession.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\src\MsgFramework\Common\vcpool.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Main\MsgFramework.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Main\MsgService.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Main\ProtocolService.h" />
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Actbase.h" />
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Actor.h" />
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActApp.h" />
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\Actbase.h" />
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActCall.h" />
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActConnect.h" />
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActHere.h" />
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActOffline.h" />
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActOnline.h" />
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActProtReq.h" />
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActProtResp.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Agreement.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\appsignals.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Dispatcher.h" />
@@ -60,8 +85,10 @@
     <ClInclude Include="..\..\..\src\MsgFramework\Socket\udpsession.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\stdafx.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\targetver.h" />
+    <ClInclude Include="..\..\..\src\MsgFramework\Tools\container_device.hpp" />
     <ClInclude Include="..\..\..\src\MsgFramework\Tools\IdCreater.hpp" />
     <ClInclude Include="..\..\..\src\MsgFramework\Tools\MsgObjectPool.hpp" />
+    <ClInclude Include="..\..\..\src\MsgFramework\Tools\VectorDevice.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7D9F66B4-2B36-435E-8777-ED539696EF52}</ProjectGuid>
@@ -108,6 +135,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

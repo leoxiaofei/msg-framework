@@ -36,18 +36,29 @@ void ProtSet::Prepare(unsigned short uVersion, const std::vector<unsigned short>
 
 }
 
-bool ProtSet::NeedReady()
+void ProtSet::GetReadyData(std::vector<char>& data)
 {
-	bool bRet(false);
+	Msg::MsgStream msgStream(data);
+	for (ProtCont::const_iterator citor = m_pImpl->contReceiver.begin();
+		citor != m_pImpl->contReceiver.end(); ++citor)
+	{
+		if ((*citor)->NeedReady())
+		{
+			(*citor)->GetReadyData(msgStream);
+		}
+	}
+}
+
+void ProtSet::SetReadyData(std::vector<char>& data)
+{
+	Msg::MsgStream msgStream(data);
 	for (ProtCont::const_iterator citor = m_pImpl->contSender.begin();
 		citor != m_pImpl->contSender.end(); ++citor)
 	{
 		if ((*citor)->NeedReady())
 		{
-			bRet = true;
-			break;
+			(*citor)->SetReadyData(msgStream);
 		}
 	}
-	return bRet;
 }
 

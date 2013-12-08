@@ -13,11 +13,11 @@ public:
 	~AppSignals();
 
 	typedef boost::signals2::signal<void(unsigned int, 
-		const std::tr1::shared_ptr<std::stringstream>& )> SigReceive;
+		std::vector<char>* )> SigReceive;
 	typedef SigReceive::slot_type SlotReceive;
 
 	void ConnectReceive(const SlotReceive& pFunc);
-	void EmitReceive(unsigned int uHostId, const std::tr1::shared_ptr<std::stringstream>& ptData);
+	void EmitReceive(unsigned int uHostId, std::vector<char>* ptData);
 
 	typedef boost::signals2::signal<void(const std::string&, unsigned int, unsigned int)> SigConResult;
 	typedef SigConResult::slot_type SlotConResult;

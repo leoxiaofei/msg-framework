@@ -17,13 +17,16 @@ public:
 	UdpSession(MsgObjectPool<UdpPacket> &mopPackPool);
 	~UdpSession();
 
-	typedef boost::function<void(std::tr1::shared_ptr<std::stringstream>, 
-		const boost::asio::ip::udp::endpoint&)> FuncReceive;
-	typedef boost::function<void ( UdpPacket* ,
-		const boost::asio::ip::udp::endpoint& )> FuncSend;
-
 	void SetEndPoint(const boost::asio::ip::udp::endpoint& point);
+
+	typedef boost::function<void(UdpPacket*,
+		const boost::asio::ip::udp::endpoint&)> FuncSend;
+	typedef boost::function<void(unsigned int , int )> FuncResult;
+	typedef boost::function<void(std::vector<char>*, 
+		const boost::asio::ip::udp::endpoint&)> FuncReceive;
+
 	void SetSendFunc(const FuncSend& pFunc);
+	void SetResultFunc(const FuncResult& pFunc);
 	void SetReceiveFunc(const FuncReceive& pFunc);
 
 	void Clear();

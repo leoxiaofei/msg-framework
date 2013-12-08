@@ -16,6 +16,7 @@
 #include <windows.h>
 #include "../Socket/constant.h"
 #include "../Protocol/DispZlib.h"
+#include <boost/iostreams/stream.hpp> 
 
 char* sz = 
 	"Welcome to the Boost C++ Libraries\n"
@@ -113,7 +114,6 @@ char* sz =
 int MsgFrameMain( int argc, _TCHAR* argv[] )
 {
 
-//  	std::stringstream stream;
 // 
 // 	stream << str;
 // 	stream.clear();
@@ -153,12 +153,11 @@ int MsgFrameMain( int argc, _TCHAR* argv[] )
 // 		stream.clear(); //在进行多次转换前，必须清除stream
 // 		stream << "789"; //插入bool值
 // 		// 去掉下面两行注释，看看每次循环，你的内存消耗增加了多少！
-// 		std::cout<<"Size of stream = "<<stream.str().length()<<std::endl;
-// 		system("PAUSE");
-// 	}
-
-// 	system("PAUSE");
-// 	return EXIT_SUCCESS;
+// 		std::cout<<"Size of stream = "<<stream.str()<<std::endl;
+//  		system("PAUSE");
+//  	}
+// 
+//  	return EXIT_SUCCESS;
 	
 	std::srand(static_cast<unsigned int>(time(0)));
 
@@ -173,18 +172,18 @@ int MsgFrameMain( int argc, _TCHAR* argv[] )
 	ProtocolService protocol;
 	Dispatcher* dispatcher = protocol.GetDispatcher();
 
-	udp->GetSignals()->ConnectReceive(boost::bind(&Dispatcher::ReceiveUdpData, 
+	udp->GetSignals()->ConnectReceive(boost::bind(&Dispatcher::as_ReceiveUdpData, 
 		dispatcher,	_1, _2, _3));
-	tcp->GetSignals()->ConnectReceive(boost::bind(&Dispatcher::ReceiveTcpData, 
+	tcp->GetSignals()->ConnectReceive(boost::bind(&Dispatcher::as_ReceiveTcpData, 
 		dispatcher,	_1, _2, _3));
-	tcp->GetSignals()->ConnectConResult(boost::bind(&Dispatcher::TcpConResult,
+	tcp->GetSignals()->ConnectConResult(boost::bind(&Dispatcher::as_TcpConResult,
 		dispatcher, _1, _2, _3));
 
-	dispatcher->GetSocketSignals()->ConnectBroadcast(boost::bind(&UdpMonitor::Broadcast, 
+	dispatcher->GetSocketSignals()->ConnectBroadcast(boost::bind(&UdpMonitor::as_Broadcast, 
 		udp, _1, MSG_SOCKET_PORT));
-	dispatcher->GetSocketSignals()->ConnectSendUdp(boost::bind(&UdpMonitor::SendTo, 
+	dispatcher->GetSocketSignals()->ConnectSendUdp(boost::bind(&UdpMonitor::as_SendTo, 
 		udp, _1, _2, _3, _4));
-	dispatcher->GetSocketSignals()->ConnectSendTcp(boost::bind(&TcpMonitor::SendTo, 
+	dispatcher->GetSocketSignals()->ConnectSendTcp(boost::bind(&TcpMonitor::as_SendTo, 
 		tcp, _1, _2, _3, _4));
 	dispatcher->GetSocketSignals()->ConnectTcpConnect(boost::bind(&TcpMonitor::Connect, 
 		tcp, _1, _2));
@@ -193,7 +192,7 @@ int MsgFrameMain( int argc, _TCHAR* argv[] )
 
 // 	unsigned int uHostId = dispatcher->TcpConnect("127.0.0.1", 5123);
 //  	Sleep(5000);
-// 	std::tr1::shared_ptr<std::stringstream> ptData(new std::stringstream);
+// 	std::vector<char>* ptData(new std::stringstream);
 // 	(*ptData)<<sz;
 // 	dispatcher->SendData(uHostId, ptData);
 // 	Sleep(5000);

@@ -9,6 +9,8 @@
 #include <boost/bind.hpp>
 #include <boost/asio/placeholders.hpp>
 #include <queue>
+#include "../Common/vcpool.h"
+#include "constant.h"
 
 using namespace boost::asio;
 using std::tr1::shared_ptr;
@@ -31,6 +33,7 @@ public:
 	RcvdTcpPacket rcvdPacket;
 
 	FuncReceive funcReceive;
+	FuncResult  funcResult;
 };
 
 TcpSession::TcpSession(boost::asio::io_service& io, MsgObjectPool<SendTcpPacket>& pPool)
@@ -52,7 +55,7 @@ void TcpSession::Connected( std::tr1::shared_ptr<ip::tcp::socket> ptSocket )
 
 void TcpSession::StartReceive()
 {
-	m_pImpl->rcvdPacket.ptStream.reset();
+	m_pImpl->rcvdPacket.pData = NULL;
 	ReceiveHead();
 }
 
@@ -102,7 +105,8 @@ void TcpSession::ReceiveBodyHandler( const boost::system::error_code& ec, std::s
 	}
 	RcvdTcpPacket& rcvdPacket = m_pImpl->rcvdPacket;
 	rcvdPacket.uCurrent += packet_bytes;
-	rcvdPacket.ptStream->write(m_pImpl->arBuffer.data(), packet_bytes);
+	rcvdPacket.pData->reserve(rcvdPacket.uCurrent);
+	std::copy(m_pImpl->arBuffer.begin(), m_pImpl->arBuffer.end(), std::back_inserter(*rcvdPacket.pData));
 
 	if ( rcvdPacket.uCurrent != rcvdPacket.uTotal)
 	{
@@ -111,7 +115,7 @@ void TcpSession::ReceiveBodyHandler( const boost::system::error_code& ec, std::s
 	else
 	{
 		///TODO:完整收到消息，提交数据
-		m_pImpl->funcReceive(rcvdPacket.ptStream, m_pImpl->ptSocket->remote_endpoint());
+		m_pImpl->funcReceive(rcvdPacket.pData, m_pImpl->ptSocket->remote_endpoint());
 
 		StartReceive();
 	}
@@ -130,7 +134,11 @@ void TcpSession::SendData( unsigned int uOrder, const char* szData, unsigned int
 	std::copy((unsigned char*)szData, (unsigned char*)szData + uSize, 
 		pPacket->vecData.begin());
 
-	m_pImpl->ios.post(boost::bind(&TcpSession::As_Send, this, pPacket));
+	m_pImpl->quSendPacket.push(pPacket);
+	if (m_pImpl->quSendPacket.size() == 1)
+	{
+		SendHead(pPacket);
+	}
 }
 
 void TcpSession::InitRPacket()
@@ -138,16 +146,7 @@ void TcpSession::InitRPacket()
 	RcvdTcpPacket& packet = m_pImpl->rcvdPacket;
 	packet.uCurrent = 0;
 	packet.uTotal   = 0;
-	packet.ptStream.reset(new std::stringstream);
-}
-
-void TcpSession::As_Send(SendTcpPacket* buf )
-{
-	m_pImpl->quSendPacket.push(buf);
-	if (m_pImpl->quSendPacket.size() == 1)
-	{
-		SendHead(buf);
-	}
+	packet.pData = VcPool::Instance().New();
 }
 
 void TcpSession::StartSend()
@@ -190,6 +189,8 @@ void TcpSession::SendBodyHandler( const boost::system::error_code& ec, std::size
 	{
 		m_pImpl->quSendPacket.pop();
 		m_pImpl->mopPackPool.Recycle(pPacket);
+		///发送完成
+		m_pImpl->funcResult(pPacket->uOrder, Constant::RF_SUCCESS);
 	}
 	StartSend();
 }
@@ -213,4 +214,9 @@ void TcpSession::SendBody(SendTcpPacket* pPacket)
 void TcpSession::SetReceiveFunc( const FuncReceive& pFunc )
 {
 	m_pImpl->funcReceive = pFunc;
+}
+
+void TcpSession::SetResultFunc(const FuncResult& pFunc)
+{
+	m_pImpl->funcResult = pFunc;
 }

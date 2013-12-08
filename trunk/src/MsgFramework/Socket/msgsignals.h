@@ -13,23 +13,23 @@ public:
 	~MsgSignals();
 
 	typedef boost::signals2::signal<void(const std::string&, unsigned int, 
-		const std::tr1::shared_ptr<std::stringstream>&)> SigReceive;
+		std::vector<char>*)> SigReceive;
 	typedef SigReceive::slot_type SlotReceive;
 
 	void ConnectReceive(const SlotReceive& pFunc);
 	void EmitReceive(const std::string& strAddr, unsigned int uPort, 
-		const std::tr1::shared_ptr<std::stringstream>& ptData);
+		std::vector<char>* ptData);
 
 	typedef boost::signals2::signal<void(const std::string&, unsigned int, bool)> SigConResult;
 	typedef SigConResult::slot_type SlotConResult;
 	void ConnectConResult(const SlotConResult& pFunc);
 	void EmitConResult(const std::string& strAddr, unsigned int uPort, bool bSuccess);
 
-	typedef boost::signals2::signal<void(unsigned int, unsigned int)> SigError;
-	typedef SigError::slot_type SlotError;
+	typedef boost::signals2::signal<void(unsigned int, int)> SigSendResult;
+	typedef SigSendResult::slot_type SlotSendResult;
 
-	void ConnectSendError(const SlotError& pFunc);
-	void EmitSendError(unsigned int uOrder, unsigned int uErrorFlag);
+	void ConnectSendResult(const SlotSendResult& pFunc);
+	void EmitSendResult(unsigned int uOrder, int uResultFlag);
 
 private:
 	std::tr1::shared_ptr<Impl> m_pImpl;

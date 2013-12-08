@@ -1,19 +1,20 @@
 #ifndef PROTOCOLBASE_H__
 #define PROTOCOLBASE_H__
 
-#include <memory>
+#include "../Tools/VectorDevice.h"
+
 
 class ProtocolBase
 {
 public:
 	virtual ~ProtocolBase(){};
-	virtual bool SendData(std::tr1::shared_ptr<std::stringstream>& ptStream) = 0;
-	virtual bool ReceiveData(std::tr1::shared_ptr<std::stringstream>& ptStream) = 0;
+	virtual bool SendData(std::vector<char>*& pData) = 0;
+	virtual bool ReceiveData(std::vector<char>*& pData) = 0;
 	virtual int GetType() = 0;
 
 	virtual bool NeedReady() { return false; };
-	virtual void GetReadyData(std::stringstream& ptStream) {};
-	virtual void SetReadyData(std::stringstream& ptStream) {};
+	virtual void GetReadyData(Msg::MsgStream& stream) {};
+	virtual void SetReadyData(Msg::MsgStream& stream) {};
 
 };
 

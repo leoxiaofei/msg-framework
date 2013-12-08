@@ -17,6 +17,7 @@
 #include <unordered_map>
 #include <iosfwd>
 #include "msgsignals.h"
+#include "../Common/vcpool.h"
 
 using namespace boost::asio;
 using namespace boost::signals2;
@@ -104,22 +105,14 @@ void UdpMonitor::ReadHandler( const boost::system::error_code& ec, std::size_t p
 	ReadyRead();
 }
 
-void UdpMonitor::SendTo(unsigned int uOrder, const std::tr1::shared_ptr<std::stringstream>& ptData, 
-					   const std::string& strAddr, unsigned short uPort /*= 2425*/ )
-{
 
-	ip::udp::endpoint senderEndpoint(ip::address_v4::from_string(strAddr), uPort);
-	m_pImpl->ios.post(boost::bind(&UdpMonitor::As_SendTo, this,
-		uOrder, ptData, senderEndpoint));
-}
 
-void UdpMonitor::As_SendTo( unsigned int uOrder,
-	const std::tr1::shared_ptr<std::stringstream>& ptData, 
+void UdpMonitor::SendTo( unsigned int uOrder,
+	std::vector<char>* ptData, 
 	const boost::asio::ip::udp::endpoint& point )
 {
-	const std::string strBuf = ptData->str();
-	const char* szData = strBuf.c_str();
-	std::size_t uSize = strBuf.size();
+	const char* szData = ptData->data();
+	std::size_t uSize = ptData->size();
 
 	//////////////////////////////////////////////////////////////////////////
 	///·¢ËÍÏûÏ¢
@@ -131,21 +124,16 @@ void UdpMonitor::As_SendTo( unsigned int uOrder,
 
 	pSession->SendData(uOrder, szData, uSize);
 	//////////////////////////////////////////////////////////////////////////
+	VcPool::Instance().Recycle(ptData);
 }
 
-void UdpMonitor::Broadcast(const std::tr1::shared_ptr<std::stringstream>& ptData, unsigned short uPort)
-{
-	ip::udp::endpoint senderEndpoint(ip::address_v4::broadcast(), uPort);
-	m_pImpl->ios.post(boost::bind(&UdpMonitor::As_Broadcast, this,
-		ptData, senderEndpoint));
-}
 
-void UdpMonitor::As_Broadcast( const std::tr1::shared_ptr<std::stringstream>& ptData,
+
+void UdpMonitor::Broadcast( std::vector<char>* ptData,
 	const boost::asio::ip::udp::endpoint& point )
 {
-	const std::string strBuf = ptData->str();
-	const char* szData = strBuf.c_str();
-	std::size_t uSize = strBuf.size();
+	const char* szData = ptData->data();
+	std::size_t uSize = ptData->size();
 	assert(uSize < SPLIT_SIZE);
 	UdpPacket* pData = m_pImpl->mopPackPool.New();
 	if (pData == NULL)
@@ -158,6 +146,7 @@ void UdpMonitor::As_Broadcast( const std::tr1::shared_ptr<std::stringstream>& pt
 	pData->uUsed = uSize;
 	memcpy_s(pData->szData, SPLIT_SIZE, szData, uSize);
 	BroadcastPacket(pData, point);
+	VcPool::Instance().Recycle(ptData);
 }
 
 void UdpMonitor::BroadcastPacket( UdpPacket* packet, const boost::asio::ip::udp::endpoint& point )
@@ -207,6 +196,7 @@ UdpSession* UdpMonitor::CreateSession( const boost::asio::ip::udp::endpoint& poi
 		pSession = new UdpSession(m_pImpl->mopPackPool);
 		pSession->SetSendFunc(boost::bind(&UdpMonitor::SendPacket, this, _1, _2));
 		pSession->SetReceiveFunc(boost::bind(&UdpMonitor::ReceiveData, this, _1, _2));
+		pSession->SetResultFunc(boost::bind(&UdpMonitor::SendResult, this, _1, _2));
 	}
 	pSession->SetEndPoint(point);
 	std::string strEp;
@@ -227,10 +217,20 @@ MsgSignals* UdpMonitor::GetSignals()
 	return &m_pImpl->udpSig;
 }
 
-void UdpMonitor::ReceiveData( std::tr1::shared_ptr<std::stringstream> ptData, 
+void UdpMonitor::ReceiveData( std::vector<char>* ptData, 
 	const boost::asio::ip::udp::endpoint& point )
 {
 	m_pImpl->udpSig.EmitReceive(point.address().to_string(), point.port(), ptData);
+}
+
+boost::asio::io_service& UdpMonitor::GetIOs()
+{
+	return m_pImpl->ios;
+}
+
+void UdpMonitor::SendResult(unsigned int uOrder, int nResultFlag)
+{
+	m_pImpl->udpSig.EmitSendResult(uOrder, nResultFlag);
 }
 
 
