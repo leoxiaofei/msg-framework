@@ -17,13 +17,12 @@ public:
 	UdpSession(MsgObjectPool<UdpPacket> &mopPackPool);
 	~UdpSession();
 
-	void SetEndPoint(const boost::asio::ip::udp::endpoint& point);
+	void SetEndPoint(const boost::asio::ip::udp::endpoint& point, unsigned int uHostId);
 
 	typedef boost::function<void(UdpPacket*,
 		const boost::asio::ip::udp::endpoint&)> FuncSend;
-	typedef boost::function<void(unsigned int , int )> FuncResult;
-	typedef boost::function<void(std::vector<char>*, 
-		const boost::asio::ip::udp::endpoint&)> FuncReceive;
+	typedef boost::function<void(unsigned int, int)> FuncResult;
+	typedef boost::function<void(std::vector<char>*, unsigned int uHostId)> FuncReceive;
 
 	void SetSendFunc(const FuncSend& pFunc);
 	void SetResultFunc(const FuncResult& pFunc);

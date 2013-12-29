@@ -19,10 +19,13 @@ public:
 	SocketSignals* GetSocketSignals();
 
 
-	typedef boost::function<unsigned int(unsigned int, unsigned short,
+	typedef boost::function<void(unsigned int, unsigned short,
 		std::vector<char>*) > FuncReceive;
 
 	void SetReceiver(const FuncReceive& receiveFunc);
+	void SendData(unsigned int uHostId, unsigned int uOrder, unsigned short eActType,
+		std::vector<char>* ptData);
+	void BroadcastData(unsigned short eActType, std::vector<char>* ptData);
 
 public: ///App调用
 	void as_UdpConnect(const std::string& strIp, unsigned short uPort);
@@ -32,9 +35,6 @@ public: ///App调用
 
 protected:
 	void StartConnect(const std::string& strIp, unsigned short uPort, int eType);
-	void SendData(unsigned int uHostId, unsigned int uOrder, unsigned short eActType,
-		std::vector<char>* ptData);
-	void BroadcastData(unsigned short eActType, std::vector<char>* ptData);
 
 public: ///Socket调用
 	void as_ReceiveUdpData(const std::string& strAddr, unsigned int uPort, 

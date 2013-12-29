@@ -69,9 +69,6 @@
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Dispatcher.cpp">
       <Filter>Source Files\Protocol</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\HostManager.cpp">
-      <Filter>Source Files\Protocol</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\socketsignals.cpp">
       <Filter>Source Files\Protocol</Filter>
     </ClCompile>
@@ -143,6 +140,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActProtResp.cpp">
       <Filter>Source Files\Protocol\act</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Common\hostmanager.cpp">
+      <Filter>Source Files\Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -274,6 +274,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActProtResp.h">
       <Filter>Header Files\Protocol\act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Common\hostinfo.h">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Common\hostmanager.h">
+      <Filter>Header Files\Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

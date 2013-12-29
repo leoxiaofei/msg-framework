@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "HostManager.h"
+#include "hostmanager.h"
 
-#include "HostInfo.h"
+#include "hostinfo.h"
 
 #include "../Tools/MsgObjectPool.hpp"
 #include "../Tools/IdCreater.hpp"
@@ -115,14 +115,14 @@ HostManager::TransType HostManager::GetHostType( const HostInfo* pHostInfo )
 	return (pHostInfo->uHostId & 0x80000000) ? TT_TCP : TT_UDP;
 }
 
-std::string HostManager::GetHsDesc( const std::string& strIp, unsigned short uPort )
-{
-	std::string strTemp;
-	std::stringstream ss;
-	ss<<strIp<<":"<<uPort;
-	ss>>strTemp;
-	return strTemp;
-}
+// std::string HostManager::GetHsDesc( const std::string& strIp, unsigned short uPort )
+// {
+// 	std::string strTemp;
+// 	std::stringstream ss;
+// 	ss<<strIp<<":"<<uPort;
+// 	ss>>strTemp;
+// 	return strTemp;
+// }
 
 // unsigned int HostManager::NewHost( const std::string& strIp, unsigned short uPort )
 // {

@@ -22,6 +22,8 @@ public:
 	MsgObjectPool<UdpPacket> &mopPackPool;
 
 	boost::asio::ip::udp::endpoint epSend;
+	unsigned int uHostId;
+
 	FuncSend funcSend;
 	FuncReceive funcReceive;
 	FuncResult funcResult;
@@ -181,16 +183,16 @@ void UdpSession::CheckEmitReceive( unsigned int uOrder )
 		if (rPacket.uCurrent == rPacket.uTotal)
 		{
 			///TODO:完整收到消息，提交数据
-			//m_pImpl->sigReceiveData(uOrder, rPacket.ptStream);
-			m_pImpl->funcReceive(rPacket.pData, m_pImpl->epSend);
+			m_pImpl->funcReceive(rPacket.pData, m_pImpl->uHostId);
 			m_pImpl->mapReceiveData.erase(iFind);
 		}
 	}
 }
 
-void UdpSession::SetEndPoint( const boost::asio::ip::udp::endpoint& point )
+void UdpSession::SetEndPoint( const boost::asio::ip::udp::endpoint& point, unsigned int uHostId )
 {
 	m_pImpl->epSend = point;
+	m_pImpl->uHostId = uHostId;
 }
 
 void UdpSession::SendData( unsigned int uOrder, const char* szData, std::size_t packet_bytes )
