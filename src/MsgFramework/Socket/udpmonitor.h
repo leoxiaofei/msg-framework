@@ -23,8 +23,7 @@ public:
 	bool Listen(unsigned short sPort);
 
 	void as_Broadcast(std::vector<char>* ptData, unsigned short uPort);
-	void as_SendTo(unsigned int uOrder, std::vector<char>* ptData,
-		const std::string& strAddr, unsigned short uPort);
+	void as_SendTo(unsigned int uOrder, std::vector<char>* ptData, unsigned int uHostId);
 
 	MsgSignals* GetSignals();
 
@@ -37,21 +36,17 @@ protected:
 	void BroadcastPacket(UdpPacket* packet, const boost::asio::ip::udp::endpoint& point);
 	void BroadcastHandler( const boost::system::error_code& ec);
 
-	void SendTo(unsigned int uOrder, std::vector<char>* ptData, 
-		const boost::asio::ip::udp::endpoint& point);
+	void SendTo(unsigned int uOrder, std::vector<char>* ptData, unsigned int uHostId);
 	void SendPacket(UdpPacket* packet, const boost::asio::ip::udp::endpoint& point);
 	void SendToHandler( const boost::system::error_code& ec);
 
 
 	void SendResult(unsigned int uOrder, int nResultFlag);
 
-	void ReceiveData(std::vector<char>* ptData, 
-		const boost::asio::ip::udp::endpoint& point);
+	void ReceiveData(std::vector<char>* ptData, unsigned int uHostId);
 
-	UdpSession* FindSession(const boost::asio::ip::udp::endpoint& point);
-	UdpSession* CreateSession(const boost::asio::ip::udp::endpoint& point);
-
-	void GetEpDesc(const boost::asio::ip::udp::endpoint& point, std::string& strDesc);
+	UdpSession* FindSession(unsigned int uHostId);
+	UdpSession* CreateSession(unsigned int uHostId);
 
 	boost::asio::io_service& GetIOs();
 

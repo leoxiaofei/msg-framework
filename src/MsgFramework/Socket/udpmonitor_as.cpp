@@ -6,8 +6,7 @@
 
 using namespace boost::asio;
 
-void UdpMonitor::as_SendTo(unsigned int uOrder, std::vector<char>* ptData,
-	const std::string& strAddr, unsigned short uPort /*= 2425*/)
+void UdpMonitor::as_SendTo(unsigned int uOrder, std::vector<char>* ptData, unsigned int uHostId)
 {
 	ip::udp::endpoint senderEndpoint(ip::address_v4::from_string(strAddr), uPort);
 	GetIOs().post(boost::bind(&UdpMonitor::SendTo, this,

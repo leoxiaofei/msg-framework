@@ -60,9 +60,20 @@ void Actor::ReceiveData(unsigned int uHostId, unsigned short eActType, std::vect
 
 unsigned int Actor::SendData(unsigned int uHostId, unsigned short eActType, std::vector<char>* ptData)
 {
-	boost::mutex::scoped_lock lock(m_pImpl->mxOrderId);
-	unsigned int uOrder = m_pImpl->icOrderId();
-	m_pImpl->sendFunc(uHostId, uOrder, eActType, ptData);
+	unsigned int uOrder = 0;
+
+	if (uHostId != 0)
+	{
+		boost::mutex::scoped_lock lock(m_pImpl->mxOrderId);
+		uOrder = m_pImpl->icOrderId();
+		m_pImpl->sendFunc(uHostId, uOrder, eActType, ptData);
+	}
+	else
+	{
+		m_pImpl->broadcastFunc(eActType, ptData);
+
+	}
+	
 	return uOrder;
 }
 
@@ -82,14 +93,11 @@ void Actor::Init()
 
 	p = new ActOnline();
 	m_pImpl->mapAct[p->GetType()] = p;
-	p->SetSender(boost::bind(&Actor::BroadcastData, this, _1, _2, _3));
+	p->SetSender(boost::bind(&Actor::SendData, this, _1, _2, _3));
+
 }
 
-unsigned int Actor::BroadcastData(unsigned int uHostId, unsigned short eActType, std::vector<char>* ptData)
-{
-	m_pImpl->broadcastFunc(eActType, ptData);
-	return 0;
-}
+
 
 
 

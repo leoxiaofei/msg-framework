@@ -18,13 +18,15 @@
 #include <iosfwd>
 #include "msgsignals.h"
 #include "../Common/vcpool.h"
+#include "../Common/HostManager.h"
+#include "../Common/HostInfo.h"
 
 using namespace boost::asio;
 using namespace boost::signals2;
 using boost::system::error_code;
 using std::tr1::shared_ptr;
 
-typedef std::tr1::unordered_map<std::string, UdpSession* > HsSession;
+typedef std::map<unsigned int, UdpSession* >  MapSession;
 
 class UdpMonitor::Impl
 {
@@ -38,10 +40,9 @@ public:
 	shared_ptr<ip::udp::socket> ptSock;
 	std::tr1::array<char, 1024> arBuffer;
 
-// 	signal<void(unsigned int, unsigned int)> sigSendError;
 	MsgSignals udpSig;
 
-	HsSession hsSession;
+	MapSession mapSession;
 
 	MsgObjectPool<UdpPacket> mopPackPool;
 	MsgObjectPool<UdpSession> mopSession;
@@ -94,6 +95,7 @@ void UdpMonitor::ReadHandler( const boost::system::error_code& ec, std::size_t p
 	}
 	//////////////////////////////////////////////////////////////////////////
 	///接收消息
+	HostManager::Instance().FindHost(m_pImpl->epReceive, HostManager::TT_UDP);
 	UdpSession* pSession = FindSession(m_pImpl->epReceive);
 	if (!pSession)
 	{
@@ -107,19 +109,17 @@ void UdpMonitor::ReadHandler( const boost::system::error_code& ec, std::size_t p
 
 
 
-void UdpMonitor::SendTo( unsigned int uOrder,
-	std::vector<char>* ptData, 
-	const boost::asio::ip::udp::endpoint& point )
+void UdpMonitor::SendTo( unsigned int uOrder, std::vector<char>* ptData, unsigned int uHostId)
 {
 	const char* szData = ptData->data();
 	std::size_t uSize = ptData->size();
 
 	//////////////////////////////////////////////////////////////////////////
 	///发送消息
-	UdpSession* pSession = FindSession(point);
+	UdpSession* pSession = FindSession(uHostId);
 	if (!pSession)
 	{
-		pSession = CreateSession(point);
+		pSession = CreateSession(uHostId);
 	}
 
 	pSession->SendData(uOrder, szData, uSize);
@@ -175,20 +175,18 @@ void UdpMonitor::SendToHandler( const boost::system::error_code& ec )
 	ec;
 }
 
-UdpSession* UdpMonitor::FindSession( const boost::asio::ip::udp::endpoint& point )
+UdpSession* UdpMonitor::FindSession(unsigned int uHostId)
 {
 	UdpSession* pSession(NULL);
-	std::string strEp;
-	GetEpDesc(point, strEp);
-	HsSession::iterator iFind = m_pImpl->hsSession.find(strEp);
-	if (iFind != m_pImpl->hsSession.end())
+	MapSession::iterator iFind = m_pImpl->mapSession.find(uHostId);
+	if (iFind != m_pImpl->mapSession.end())
 	{
 		pSession = iFind->second;
 	}
 	return pSession;
 }
 
-UdpSession* UdpMonitor::CreateSession( const boost::asio::ip::udp::endpoint& point )
+UdpSession* UdpMonitor::CreateSession(unsigned int uHostId)
 {
 	UdpSession* pSession = m_pImpl->mopSession.New();
 	if (!pSession)
@@ -198,27 +196,22 @@ UdpSession* UdpMonitor::CreateSession( const boost::asio::ip::udp::endpoint& poi
 		pSession->SetReceiveFunc(boost::bind(&UdpMonitor::ReceiveData, this, _1, _2));
 		pSession->SetResultFunc(boost::bind(&UdpMonitor::SendResult, this, _1, _2));
 	}
-	pSession->SetEndPoint(point);
-	std::string strEp;
-	GetEpDesc(point, strEp);
-	m_pImpl->hsSession[strEp] = pSession;
+
+	HostInfo* pHostInfo = HostManager::Instance().FindHost(uHostId);
+	ip::udp::endpoint senderEndpoint(ip::address_v4::from_string(pHostInfo->strIp), pHostInfo->uPort);
+	pSession->SetEndPoint(senderEndpoint);
+	m_pImpl->mapSession[uHostId] = pSession;
 	return pSession;
 }
 
-void UdpMonitor::GetEpDesc( const boost::asio::ip::udp::endpoint& point, std::string& strDesc )
-{
-	std::stringstream ss;
-	ss << point;
-	ss >> strDesc;
-}
+
 
 MsgSignals* UdpMonitor::GetSignals()
 {
 	return &m_pImpl->udpSig;
 }
 
-void UdpMonitor::ReceiveData( std::vector<char>* ptData, 
-	const boost::asio::ip::udp::endpoint& point )
+void UdpMonitor::ReceiveData( std::vector<char>* ptData, unsigned int uHostId)
 {
 	m_pImpl->udpSig.EmitReceive(point.address().to_string(), point.port(), ptData);
 }

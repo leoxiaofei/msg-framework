@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\MsgFramework\Common\hostmanager.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Common\vcpool.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Main\main.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Main\MsgFramework.cpp" />
@@ -30,7 +31,6 @@
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Dispatcher_as.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\DispXor.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\DispZlib.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\HostManager.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\ProtManager.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\ProtSet.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\socketsignals.cpp" />
@@ -46,6 +46,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\src\MsgFramework\Common\hostinfo.h" />
+    <ClInclude Include="..\..\..\src\MsgFramework\Common\hostmanager.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Common\vcpool.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Main\MsgFramework.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Main\MsgService.h" />

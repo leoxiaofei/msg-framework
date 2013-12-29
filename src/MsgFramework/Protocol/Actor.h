@@ -28,7 +28,6 @@ public:
 
 	unsigned int SendData(unsigned int uHostId, unsigned short eActType, std::vector<char>* ptData);
 	unsigned int as_SendData(unsigned int uHostId, unsigned short eActType, std::vector<char>* ptData);
-	unsigned int BroadcastData(unsigned int uHostId, unsigned short eActType, std::vector<char>* ptData);
 
 
 protected:
