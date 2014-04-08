@@ -144,6 +144,9 @@
     <ClCompile Include="..\..\..\src\MsgFramework\Common\hostmanager.cpp">
       <Filter>Source Files\Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Socket\skconvert.cpp">
+      <Filter>Source Files\Socket</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\MsgFramework\Main\MsgService.h">
@@ -159,12 +162,6 @@
       <Filter>Header Files\Protocol</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Dispatcher.h">
-      <Filter>Header Files\Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\HostInfo.h">
-      <Filter>Header Files\Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\HostManager.h">
       <Filter>Header Files\Protocol</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\ProtocolBase.h">
@@ -280,6 +277,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\MsgFramework\Common\hostmanager.h">
       <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Socket\skconvert.h">
+      <Filter>Header Files\Socket</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

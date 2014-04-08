@@ -35,6 +35,7 @@
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\ProtSet.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\socketsignals.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Socket\msgsignals.cpp" />
+    <ClCompile Include="..\..\..\src\MsgFramework\Socket\skconvert.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Socket\tcpmonitor.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Socket\tcpmonitor_as.cpp" />
     <ClCompile Include="..\..\..\src\MsgFramework\Socket\tcpsession.cpp" />
@@ -68,8 +69,6 @@
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Dispatcher.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\DispXor.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\DispZlib.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\HostInfo.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\HostManager.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\ProtManager.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\ProtocolBase.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\ProtSet.h" />
@@ -79,6 +78,7 @@
     <ClInclude Include="..\..\..\src\MsgFramework\Socket\msgsignals.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Socket\rcvdtcppacket.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Socket\rcvdudppacket.h" />
+    <ClInclude Include="..\..\..\src\MsgFramework\Socket\skconvert.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Socket\tcpmonitor.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Socket\tcppacket.h" />
     <ClInclude Include="..\..\..\src\MsgFramework\Socket\tcpsession.h" />

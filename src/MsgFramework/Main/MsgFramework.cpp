@@ -173,20 +173,20 @@ int MsgFrameMain( int argc, _TCHAR* argv[] )
 	Dispatcher* dispatcher = protocol.GetDispatcher();
 
 	udp->GetSignals()->ConnectReceive(boost::bind(&Dispatcher::as_ReceiveUdpData, 
-		dispatcher,	_1, _2, _3));
+		dispatcher,	_1, _2));
 	tcp->GetSignals()->ConnectReceive(boost::bind(&Dispatcher::as_ReceiveTcpData, 
-		dispatcher,	_1, _2, _3));
+		dispatcher,	_1, _2));
 	tcp->GetSignals()->ConnectConResult(boost::bind(&Dispatcher::as_TcpConResult,
-		dispatcher, _1, _2, _3));
+		dispatcher, _1, _2));
 
 	dispatcher->GetSocketSignals()->ConnectBroadcast(boost::bind(&UdpMonitor::as_Broadcast, 
 		udp, _1, MSG_SOCKET_PORT));
 	dispatcher->GetSocketSignals()->ConnectSendUdp(boost::bind(&UdpMonitor::as_SendTo, 
-		udp, _1, _2, _3, _4));
+		udp, _1, _2, _3));
 	dispatcher->GetSocketSignals()->ConnectSendTcp(boost::bind(&TcpMonitor::as_SendTo, 
-		tcp, _1, _2, _3, _4));
+		tcp, _1, _2, _3));
 	dispatcher->GetSocketSignals()->ConnectTcpConnect(boost::bind(&TcpMonitor::Connect, 
-		tcp, _1, _2));
+		tcp, _1));
 
 	Sleep(5000);
 

@@ -115,14 +115,24 @@ HostManager::TransType HostManager::GetHostType( const HostInfo* pHostInfo )
 	return (pHostInfo->uHostId & 0x80000000) ? TT_TCP : TT_UDP;
 }
 
-// std::string HostManager::GetHsDesc( const std::string& strIp, unsigned short uPort )
-// {
-// 	std::string strTemp;
-// 	std::stringstream ss;
-// 	ss<<strIp<<":"<<uPort;
-// 	ss>>strTemp;
-// 	return strTemp;
-// }
+std::string HostManager::GetHsDesc( const std::string& strIp, unsigned short uPort )
+{
+	std::string strTemp;
+	std::stringstream ss;
+	ss<<strIp<<":"<<uPort;
+	ss>>strTemp;
+	return strTemp;
+}
+
+HostInfo* HostManager::TakeHost(const std::string& strAddr, unsigned int uPort, TransType eType)
+{
+	HostInfo* pHostInfo = FindHost(strAddr, uPort, eType);
+	if (pHostInfo == NULL)
+	{
+		pHostInfo = NewHost(strAddr, uPort, eType);
+	}
+	return pHostInfo;
+}
 
 // unsigned int HostManager::NewHost( const std::string& strIp, unsigned short uPort )
 // {

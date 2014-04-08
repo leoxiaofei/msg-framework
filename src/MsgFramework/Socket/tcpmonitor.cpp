@@ -10,7 +10,10 @@
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/placeholders.hpp>
 #include <boost/signals2.hpp>
-#include <unordered_map>
+#include <map>
+#include "../Common/hostmanager.h"
+#include "../Common/hostinfo.h"
+#include "skconvert.h"
 
 
 
@@ -19,7 +22,7 @@ using namespace boost::signals2;
 using boost::system::error_code;
 using std::tr1::shared_ptr;
 
-typedef std::tr1::unordered_map<std::string, shared_ptr<TcpSession> > HsSession;
+typedef std::map<unsigned int , shared_ptr<TcpSession> > HsSession;
 
 class TcpMonitor::Impl
 {
@@ -70,57 +73,53 @@ void TcpMonitor::AcceptHandler( const boost::system::error_code& ec,
 	{
 		return;
 	}
-
-	AssociateSession(ptSocket, m_pImpl->epReceive);
+	
+	HostInfo* pHostInfo = HostManager::Instance().TakeHost(m_pImpl->epReceive.address().to_string(),
+		m_pImpl->epReceive.port(), HostManager::TT_TCP);
+	AssociateSession(ptSocket, pHostInfo->uHostId);
 	
 }
 
-void TcpMonitor::Connect( const std::string& strAddr, 
-	unsigned short sPort )
+void TcpMonitor::Connect(unsigned int uHostId)
 {
 	shared_ptr<ip::tcp::socket> ptSock(new ip::tcp::socket(m_pImpl->ios));
-	shared_ptr<ip::tcp::endpoint> ptEndPoint(new ip::tcp::endpoint(ip::address::from_string(strAddr), sPort));
+	HostInfo* pHostInfo = HostManager::Instance().FindHost(uHostId);
+	shared_ptr<ip::tcp::endpoint> ptEndPoint = SkConvert::TcpEndpoint(pHostInfo);
 	ptSock->async_connect(*ptEndPoint,
-		boost::bind(&TcpMonitor::ConnectHandler, this, placeholders::error, ptSock, ptEndPoint));
+		boost::bind(&TcpMonitor::ConnectHandler, this, placeholders::error, ptSock, uHostId));
 }
 
 void TcpMonitor::ConnectHandler( const boost::system::error_code& ec, 
 	std::tr1::shared_ptr<boost::asio::ip::tcp::socket> ptSocket,
-	std::tr1::shared_ptr<boost::asio::ip::tcp::endpoint> ptEndPoint )
+	unsigned int uHostId)
 {
 	if(ec)
 	{
-		m_pImpl->tcpSig.EmitConResult(ptEndPoint->address().to_string(), ptEndPoint->port(), false);
+		m_pImpl->tcpSig.EmitConResult(uHostId, false);
 		return;
 	}
 
-	AssociateSession(ptSocket, *ptEndPoint);
+	AssociateSession(ptSocket, uHostId);
 }
 
 void TcpMonitor::AssociateSession( 
 	const std::tr1::shared_ptr<boost::asio::ip::tcp::socket>& ptSocket,
-	const boost::asio::ip::tcp::endpoint& epReceive )
+	unsigned int uHostId)
 {
 	shared_ptr<TcpSession> ptSession(new TcpSession(m_pImpl->ios, m_pImpl->mopPackPool));
-	ptSession->Connected(ptSocket);
+	ptSession->Connected(ptSocket, uHostId);
 	ptSession->SetReceiveFunc(boost::bind(&TcpMonitor::ReceiveData, this, _1, _2));
 	ptSession->SetResultFunc(boost::bind(&TcpMonitor::SendResult, this, _1, _2));
 
-
-	std::string strDes;
-	GetEpDesc(epReceive, strDes);
-	m_pImpl->hsSession[strDes] = ptSession;
-	m_pImpl->tcpSig.EmitConResult(epReceive.address().to_string(), epReceive.port(), true);
+	m_pImpl->hsSession[uHostId] = ptSession;
+	m_pImpl->tcpSig.EmitConResult(uHostId, true);
 
 }
 
-void TcpMonitor::SendTo( unsigned int uOrder, std::vector<char>* ptData,
-	const boost::asio::ip::tcp::endpoint& senderEndpoint)
+void TcpMonitor::SendTo( unsigned int uOrder, std::vector<char>* ptData, unsigned int uHostId)
 {
-	std::string strDes;
-	GetEpDesc(senderEndpoint, strDes);
 
-	HsSession::iterator iFind = m_pImpl->hsSession.find(strDes);
+	HsSession::iterator iFind = m_pImpl->hsSession.find(uHostId);
 	if(iFind != m_pImpl->hsSession.end())
 	{
 		const char* szData = ptData->data();
@@ -130,17 +129,9 @@ void TcpMonitor::SendTo( unsigned int uOrder, std::vector<char>* ptData,
 	VcPool::Instance().Recycle(ptData);
 }
 
-void TcpMonitor::GetEpDesc( const boost::asio::ip::tcp::endpoint& point, std::string& strDesc )
+void TcpMonitor::ReceiveData(std::vector<char>* ptData, unsigned int uHostId)
 {
-	std::stringstream ss;
-	ss << point;
-	ss >> strDesc;
-}
-
-void TcpMonitor::ReceiveData( std::vector<char>* ptData, 
-	const boost::asio::ip::tcp::endpoint& point )
-{
-	m_pImpl->tcpSig.EmitReceive(point.address().to_string(), point.port(), ptData);
+	m_pImpl->tcpSig.EmitReceive(uHostId, ptData);
 }
 
 MsgSignals* TcpMonitor::GetSignals() const

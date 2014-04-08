@@ -16,11 +16,10 @@ public:
 	TcpSession(boost::asio::io_service& io, MsgObjectPool<SendTcpPacket>& pPool);
 	~TcpSession();
 
-	void Connected(std::tr1::shared_ptr<boost::asio::ip::tcp::socket> ptSocket);
+	void Connected(std::tr1::shared_ptr<boost::asio::ip::tcp::socket> ptSocket, unsigned int uHostId);
 	void SendData(unsigned int uOrder, const char* szData, unsigned int uSize);
 
-	typedef boost::function<void(std::vector<char>*, 
-		const boost::asio::ip::tcp::endpoint&)> FuncReceive;
+	typedef boost::function<void(std::vector<char>*, unsigned int)> FuncReceive;
 	typedef boost::function<void(unsigned int, int)> FuncResult;
 
 	void SetReceiveFunc(const FuncReceive& pFunc);

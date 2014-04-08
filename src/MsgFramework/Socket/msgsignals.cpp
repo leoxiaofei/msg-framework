@@ -22,11 +22,9 @@ MsgSignals::~MsgSignals()
 
 }
 
-void MsgSignals::EmitReceive( const std::string& strAddr, 
-	unsigned int uPort, std::vector<char>* ptData )
+void MsgSignals::EmitReceive(unsigned int uHostId, std::vector<char>* ptData)
 {
-	m_pImpl->sigReceive(strAddr, uPort, ptData);
-
+	m_pImpl->sigReceive(uHostId, ptData);
 }
 
 void MsgSignals::ConnectReceive( const SlotReceive& pFunc )
@@ -49,8 +47,8 @@ void MsgSignals::ConnectConResult( const SlotConResult& pFunc )
 	m_pImpl->sigConResult.connect(pFunc);
 }
 
-void MsgSignals::EmitConResult( const std::string& strAddr, unsigned int uPort, bool bSuccess )
+void MsgSignals::EmitConResult(unsigned int uHostId, bool bSuccess)
 {
-	m_pImpl->sigConResult(strAddr, uPort, bSuccess);
+	m_pImpl->sigConResult(uHostId, bSuccess);
 }
 
