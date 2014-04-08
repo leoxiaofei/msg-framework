@@ -20,11 +20,11 @@ public:
 	HostInfo* FindHost(unsigned int uHostId);
 	void DeleteHost(unsigned int uHostId);
 
-	enum TransType{TT_UDP, TT_TCP, TT_TOTAL};
+	enum TransType { TT_UDP, TT_TCP, TT_TOTAL };
 	HostInfo* FindHost(const std::string& strIp, unsigned short uPort, TransType eType);
 	HostInfo* NewHost(const std::string& strIp, unsigned short uPort, TransType eType);
 	void DeleteHost(const std::string& strIp, unsigned short uPort, TransType eType);
-
+	HostInfo* TakeHost(const std::string& strAddr, unsigned int uPort, TransType eType);
 	static TransType GetHostType(const HostInfo* pHostInfo);
 	static std::string GetHsDesc(const std::string& strIp, unsigned short uPort);
 

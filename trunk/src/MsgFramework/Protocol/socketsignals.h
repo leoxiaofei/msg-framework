@@ -13,17 +13,16 @@ public:
 	~SocketSignals();
 
 	typedef boost::signals2::signal<void(unsigned int, 
-		std::vector<char>* ,
-		const std::string&, unsigned short)> SigSend;
+		std::vector<char>* , unsigned int)> SigSend;
 	typedef SigSend::slot_type SlotSend;
 
 	void ConnectSendUdp(const SlotSend& pFunc);
 	void EmitSendUdp(unsigned int uOrder, std::vector<char>* ptData,
-		const std::string& strAddr, unsigned short uPort);
+		unsigned int uHostId);
 
 	void ConnectSendTcp(const SlotSend& pFunc);
 	void EmitSendTcp(unsigned int uOrder, std::vector<char>* ptData,
-		const std::string& strAddr, unsigned short uPort);
+		unsigned int uHostId);
 
 	typedef boost::signals2::signal<void(std::vector<char>*)> SigBroadcast;
 	typedef SigBroadcast::slot_type SlotBroadcast;
@@ -32,11 +31,10 @@ public:
 	void EmitBroadcast(std::vector<char>* ptData);
 
 
-	typedef boost::signals2::signal<void(const std::string&, 
-		unsigned short)> SigConnect;
+	typedef boost::signals2::signal<void(unsigned int)> SigConnect;
 	typedef SigConnect::slot_type SlotConnect;
 	void ConnectTcpConnect(const SlotConnect& pFunc);
-	void EmitTcpConnect(const std::string& strIp, unsigned short uPort);
+	void EmitTcpConnect(unsigned int uHostId);
 
 private:
 	std::tr1::shared_ptr<Impl> m_pImpl;

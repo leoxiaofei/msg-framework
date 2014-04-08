@@ -37,24 +37,16 @@ protected:
 	void StartConnect(const std::string& strIp, unsigned short uPort, int eType);
 
 public: ///Socketµ÷ÓÃ
-	void as_ReceiveUdpData(const std::string& strAddr, unsigned int uPort, 
-		std::vector<char>* ptData);
-	void as_ReceiveTcpData(const std::string& strAddr, unsigned int uPort, 
-		std::vector<char>* ptData);
-	void as_TcpConResult(const std::string& strAddr, unsigned int uPort, 
-		bool bSuccess);
-	void as_UdpConResult(const std::string& strAddr, unsigned int uPort, 
-		bool bSuccess);
+	void as_ReceiveUdpData(unsigned int uHostId, std::vector<char>* ptData);
+	void as_ReceiveTcpData(unsigned int uHostId, std::vector<char>* ptData);
+	void as_TcpConResult(unsigned int uHostId,	bool bSuccess);
+	void as_UdpConResult(unsigned int uHostId,	bool bSuccess);
 
 protected:
-	void RecUdpData(const std::string& strAddr, unsigned int uPort,
-		std::vector<char>* ptData);
-	void RecTcpData(const std::string& strAddr, unsigned int uPort,
-		std::vector<char>* ptData);
+	void RecUdpData(unsigned int uHostId, std::vector<char>* ptData);
+	void RecTcpData(unsigned int uHostId, std::vector<char>* ptData);
 
 	void RecData(unsigned int uHostId, std::vector<char>* ptData);
-
-	HostInfo* TakeHostInfo(const std::string& strAddr, unsigned int uPort, int eType);
 
 	boost::asio::io_service& GetIOs();
 

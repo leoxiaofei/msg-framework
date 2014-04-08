@@ -12,18 +12,17 @@ public:
 	MsgSignals();
 	~MsgSignals();
 
-	typedef boost::signals2::signal<void(const std::string&, unsigned int, 
+	typedef boost::signals2::signal<void(unsigned int ,
 		std::vector<char>*)> SigReceive;
 	typedef SigReceive::slot_type SlotReceive;
 
 	void ConnectReceive(const SlotReceive& pFunc);
-	void EmitReceive(const std::string& strAddr, unsigned int uPort, 
-		std::vector<char>* ptData);
+	void EmitReceive(unsigned int uHostId, std::vector<char>* ptData);
 
-	typedef boost::signals2::signal<void(const std::string&, unsigned int, bool)> SigConResult;
+	typedef boost::signals2::signal<void(unsigned int, bool)> SigConResult;
 	typedef SigConResult::slot_type SlotConResult;
 	void ConnectConResult(const SlotConResult& pFunc);
-	void EmitConResult(const std::string& strAddr, unsigned int uPort, bool bSuccess);
+	void EmitConResult(unsigned int uHostId, bool bSuccess);
 
 	typedef boost::signals2::signal<void(unsigned int, int)> SigSendResult;
 	typedef SigSendResult::slot_type SlotSendResult;

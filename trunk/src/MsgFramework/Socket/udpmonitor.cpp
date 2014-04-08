@@ -95,11 +95,12 @@ void UdpMonitor::ReadHandler( const boost::system::error_code& ec, std::size_t p
 	}
 	//////////////////////////////////////////////////////////////////////////
 	///接收消息
-	HostManager::Instance().FindHost(m_pImpl->epReceive, HostManager::TT_UDP);
-	UdpSession* pSession = FindSession(m_pImpl->epReceive);
+	HostInfo* pInfo = HostManager::Instance().TakeHost(m_pImpl->epReceive.address().to_string(), 
+		m_pImpl->epReceive.port(), HostManager::TT_UDP);
+	UdpSession* pSession = FindSession(pInfo->uHostId);
 	if (!pSession)
 	{
-		pSession = CreateSession(m_pImpl->epReceive);
+		pSession = CreateSession(pInfo);
 	}
 
 	pSession->ReceiveData(m_pImpl->arBuffer.data(), packet_bytes);
@@ -119,7 +120,8 @@ void UdpMonitor::SendTo( unsigned int uOrder, std::vector<char>* ptData, unsigne
 	UdpSession* pSession = FindSession(uHostId);
 	if (!pSession)
 	{
-		pSession = CreateSession(uHostId);
+		HostInfo* pHostInfo = HostManager::Instance().FindHost(uHostId);
+		pSession = CreateSession(pHostInfo);
 	}
 
 	pSession->SendData(uOrder, szData, uSize);
@@ -186,7 +188,7 @@ UdpSession* UdpMonitor::FindSession(unsigned int uHostId)
 	return pSession;
 }
 
-UdpSession* UdpMonitor::CreateSession(unsigned int uHostId)
+UdpSession* UdpMonitor::CreateSession(const HostInfo* pHostInfo)
 {
 	UdpSession* pSession = m_pImpl->mopSession.New();
 	if (!pSession)
@@ -197,10 +199,9 @@ UdpSession* UdpMonitor::CreateSession(unsigned int uHostId)
 		pSession->SetResultFunc(boost::bind(&UdpMonitor::SendResult, this, _1, _2));
 	}
 
-	HostInfo* pHostInfo = HostManager::Instance().FindHost(uHostId);
 	ip::udp::endpoint senderEndpoint(ip::address_v4::from_string(pHostInfo->strIp), pHostInfo->uPort);
-	pSession->SetEndPoint(senderEndpoint);
-	m_pImpl->mapSession[uHostId] = pSession;
+	pSession->SetEndPoint(senderEndpoint, pHostInfo->uHostId);
+	m_pImpl->mapSession[pHostInfo->uHostId] = pSession;
 	return pSession;
 }
 
@@ -213,7 +214,7 @@ MsgSignals* UdpMonitor::GetSignals()
 
 void UdpMonitor::ReceiveData( std::vector<char>* ptData, unsigned int uHostId)
 {
-	m_pImpl->udpSig.EmitReceive(point.address().to_string(), point.port(), ptData);
+	m_pImpl->udpSig.EmitReceive(uHostId, ptData);
 }
 
 boost::asio::io_service& UdpMonitor::GetIOs()

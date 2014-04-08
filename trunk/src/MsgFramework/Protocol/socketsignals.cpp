@@ -29,9 +29,9 @@ void SocketSignals::ConnectSendUdp( const SlotSend& pFunc )
 }
 
 void SocketSignals::EmitSendUdp( unsigned int uOrder, std::vector<char>* ptData,
-	const std::string& strAddr, unsigned short uPort )
+	unsigned int uHostId)
 {
-	m_pImpl->sigSendUdp(uOrder, ptData, strAddr, uPort);
+	m_pImpl->sigSendUdp(uOrder, ptData, uHostId);
 }
 
 void SocketSignals::ConnectSendTcp( const SlotSend& pFunc )
@@ -40,9 +40,9 @@ void SocketSignals::ConnectSendTcp( const SlotSend& pFunc )
 }
 
 void SocketSignals::EmitSendTcp( unsigned int uOrder, std::vector<char>* ptData,
-	const std::string& strAddr, unsigned short uPort )
+	unsigned int uHostId)
 {
-	m_pImpl->sigSendTcp(uOrder, ptData, strAddr, uPort);
+	m_pImpl->sigSendTcp(uOrder, ptData, uHostId);
 }
 
 void SocketSignals::ConnectBroadcast( const SlotBroadcast& pFunc )
@@ -60,8 +60,8 @@ void SocketSignals::ConnectTcpConnect( const SlotConnect& pFunc )
 	m_pImpl->sigTcpConnect.connect(pFunc);
 }
 
-void SocketSignals::EmitTcpConnect( const std::string& strIp, unsigned short uPort )
+void SocketSignals::EmitTcpConnect(unsigned int uHostId)
 {
-	m_pImpl->sigTcpConnect(strIp, uPort);
+	m_pImpl->sigTcpConnect(uHostId);
 }
 

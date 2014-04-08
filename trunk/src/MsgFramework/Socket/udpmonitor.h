@@ -12,6 +12,7 @@
 struct UdpPacket;
 class UdpSession;
 class MsgSignals;
+class HostInfo;
 
 class UdpMonitor
 {
@@ -46,7 +47,7 @@ protected:
 	void ReceiveData(std::vector<char>* ptData, unsigned int uHostId);
 
 	UdpSession* FindSession(unsigned int uHostId);
-	UdpSession* CreateSession(unsigned int uHostId);
+	UdpSession* CreateSession(const HostInfo* pHostInfo);
 
 	boost::asio::io_service& GetIOs();
 

@@ -17,10 +17,10 @@ public:
 
 	bool Listen(unsigned short sPort);
 	
-	void Connect(const std::string& strAddr, unsigned short sPort);
+	void Connect(unsigned int uHostId);
 
 	void as_SendTo(unsigned int uOrder, std::vector<char>* ptData,
-		const std::string& strAddr, unsigned short uPort);
+		unsigned int uHostId);
 
 	MsgSignals* GetSignals() const;
 
@@ -31,19 +31,16 @@ protected:
 
 	void ConnectHandler(const boost::system::error_code& ec, 
 		std::tr1::shared_ptr<boost::asio::ip::tcp::socket> ptSocket,
-		std::tr1::shared_ptr<boost::asio::ip::tcp::endpoint> ptEndPoint);
+		unsigned int uHostId);
 
 	void AssociateSession(
 		const std::tr1::shared_ptr<boost::asio::ip::tcp::socket>& ptSocket,
-		const boost::asio::ip::tcp::endpoint& epReceive);
+		unsigned int uHostId);
 
-	void GetEpDesc(const boost::asio::ip::tcp::endpoint& point, std::string& strDesc);
 
-	void SendTo(unsigned int uOrder, std::vector<char>* ptData,
-		const boost::asio::ip::tcp::endpoint& senderEndpoint);
+	void SendTo(unsigned int uOrder, std::vector<char>* ptData, unsigned int uHostId);
 
-	void ReceiveData(std::vector<char>* ptData, 
-		const boost::asio::ip::tcp::endpoint& point);
+	void ReceiveData(std::vector<char>* ptData, unsigned int uHostId);
 
 	void SendResult(unsigned int uOrder, int nResultFlag);
 

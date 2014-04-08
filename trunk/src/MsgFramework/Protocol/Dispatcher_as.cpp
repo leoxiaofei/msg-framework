@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "Dispatcher.h"
+#include "../Common/hostmanager.h"
+#include "Agreement.h"
 
 #include <boost/bind.hpp>
-#include "HostManager.h"
-#include "Agreement.h"
 #include <boost/thread.hpp>
 
 void Dispatcher::as_TcpConnect(const std::string& strIp, unsigned short uPort)
@@ -31,16 +31,12 @@ void Dispatcher::as_UdpConnect(const std::string& strIp, unsigned short uPort)
 // 	GetIOs().post(boost::bind(&Dispatcher::BroadcastData, this, ptData));
 // }
 
-void Dispatcher::as_ReceiveTcpData(const std::string& strAddr, unsigned int uPort,
-	std::vector<char>* ptData)
+void Dispatcher::as_ReceiveTcpData(unsigned int uHostId, std::vector<char>* ptData)
 {
-	GetIOs().post(boost::bind(&Dispatcher::RecTcpData, this,
-		strAddr, uPort, ptData));
+	GetIOs().post(boost::bind(&Dispatcher::RecTcpData, this, uHostId, ptData));
 }
 
-void Dispatcher::as_ReceiveUdpData(const std::string& strAddr,
-	unsigned int uPort, std::vector<char>* ptData)
+void Dispatcher::as_ReceiveUdpData(unsigned int uHostId, std::vector<char>* ptData)
 {
-	GetIOs().post(boost::bind(&Dispatcher::RecUdpData, this,
-		strAddr, uPort, ptData));
+	GetIOs().post(boost::bind(&Dispatcher::RecUdpData, this, uHostId, ptData));
 }

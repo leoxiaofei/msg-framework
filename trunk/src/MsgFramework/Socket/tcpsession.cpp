@@ -21,9 +21,12 @@ public:
 	Impl(io_service& io, MsgObjectPool<SendTcpPacket>& pool)
 	: ios(io) 
 	, mopPackPool(pool)
+	, uHostId(0)
 	{}
 
 	shared_ptr<ip::tcp::socket> ptSocket;
+	unsigned int uHostId;
+
 	std::tr1::array<char, 10240> arBuffer;
 
 	io_service& ios;
@@ -46,10 +49,10 @@ TcpSession::~TcpSession()
 
 }
 
-void TcpSession::Connected( std::tr1::shared_ptr<ip::tcp::socket> ptSocket )
+void TcpSession::Connected(std::tr1::shared_ptr<ip::tcp::socket> ptSocket, unsigned int uHostId)
 {
 	m_pImpl->ptSocket = ptSocket;
-
+	m_pImpl->uHostId = uHostId;
 	StartReceive();
 }
 
@@ -115,7 +118,7 @@ void TcpSession::ReceiveBodyHandler( const boost::system::error_code& ec, std::s
 	else
 	{
 		///TODO:完整收到消息，提交数据
-		m_pImpl->funcReceive(rcvdPacket.pData, m_pImpl->ptSocket->remote_endpoint());
+		m_pImpl->funcReceive(rcvdPacket.pData, m_pImpl->uHostId);
 
 		StartReceive();
 	}
