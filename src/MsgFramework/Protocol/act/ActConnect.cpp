@@ -2,6 +2,7 @@
 #include "ActConnect.h"
 #include "..\..\Common\vcpool.h"
 #include "..\Agreement.h"
+#include "..\Actor.h"
 
 int ActConnect::GetType()
 {
@@ -16,6 +17,6 @@ void ActConnect::ReceiveData(unsigned int uHostId, std::vector<char>* ptData)
 
 void ActConnect::SendData(unsigned int uHostId)
 {
-	m_sendFunc(uHostId, GetType(), VcPool::Instance().New());
+	m_pActor->SendData(uHostId, GetType(), VcPool::Instance().New());
 }
 

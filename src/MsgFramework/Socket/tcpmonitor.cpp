@@ -77,7 +77,7 @@ void TcpMonitor::AcceptHandler( const boost::system::error_code& ec,
 	HostInfo* pHostInfo = HostManager::Instance().TakeHost(m_pImpl->epReceive.address().to_string(),
 		m_pImpl->epReceive.port(), HostManager::TT_TCP);
 	AssociateSession(ptSocket, pHostInfo->uHostId);
-	
+	ReadyAccept();
 }
 
 void TcpMonitor::Connect(unsigned int uHostId)
@@ -107,9 +107,10 @@ void TcpMonitor::AssociateSession(
 	unsigned int uHostId)
 {
 	shared_ptr<TcpSession> ptSession(new TcpSession(m_pImpl->ios, m_pImpl->mopPackPool));
-	ptSession->Connected(ptSocket, uHostId);
 	ptSession->SetReceiveFunc(boost::bind(&TcpMonitor::ReceiveData, this, _1, _2));
 	ptSession->SetResultFunc(boost::bind(&TcpMonitor::SendResult, this, _1, _2));
+	ptSession->SetBreakOffFunc(boost::bind(&TcpMonitor::BreakOff, this, _1));
+	ptSession->Connected(ptSocket, uHostId);
 
 	m_pImpl->hsSession[uHostId] = ptSession;
 	m_pImpl->tcpSig.EmitConResult(uHostId, true);
@@ -147,5 +148,11 @@ boost::asio::io_service& TcpMonitor::GetIOs()
 void TcpMonitor::SendResult(unsigned int uOrder, int nResultFlag)
 {
 	m_pImpl->tcpSig.EmitSendResult(uOrder, nResultFlag);
+}
+
+void TcpMonitor::BreakOff(unsigned int uHostId)
+{
+	m_pImpl->hsSession.erase(m_pImpl->hsSession.find(uHostId));
+	m_pImpl->tcpSig.EmitBreakOff(uHostId);
 }
 

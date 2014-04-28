@@ -4,24 +4,23 @@
 #include <boost\function.hpp>
 #include <vector>
 
+class Actor;
+
 class ActBase
 {
 public:
 	virtual ~ActBase(){};
 
-	typedef boost::function<unsigned int (unsigned int, unsigned short,
-		std::vector<char>*) > FuncSend;
-
-	void SetSender(const FuncSend& sendFunc)
+	void SetActor(Actor* pActor)
 	{
-		m_sendFunc = sendFunc;
+		m_pActor = pActor;
 	}
 
 	virtual int GetType() = 0;
 	virtual void ReceiveData(unsigned int uHostId, std::vector<char>* ptData) = 0;
 
 protected:
-	FuncSend m_sendFunc;
+	Actor* m_pActor;
 };
 
 

@@ -37,6 +37,7 @@ public:
 
 	FuncReceive funcReceive;
 	FuncResult  funcResult;
+	FuncBreakOff funcBreakOff;
 };
 
 TcpSession::TcpSession(boost::asio::io_service& io, MsgObjectPool<SendTcpPacket>& pPool)
@@ -83,6 +84,7 @@ void TcpSession::ReceiveHeadHandler( const boost::system::error_code& ec, std::s
 {
 	if (ec)
 	{
+		m_pImpl->funcBreakOff(m_pImpl->uHostId);
 		std::cout<<ec.message();
 		return;
 	}
@@ -104,12 +106,14 @@ void TcpSession::ReceiveBodyHandler( const boost::system::error_code& ec, std::s
 {
 	if (ec)
 	{
+		m_pImpl->funcBreakOff(m_pImpl->uHostId);
+		std::cout << ec.message();
 		return;
 	}
 	RcvdTcpPacket& rcvdPacket = m_pImpl->rcvdPacket;
 	rcvdPacket.uCurrent += packet_bytes;
 	rcvdPacket.pData->reserve(rcvdPacket.uCurrent);
-	std::copy(m_pImpl->arBuffer.begin(), m_pImpl->arBuffer.end(), std::back_inserter(*rcvdPacket.pData));
+	std::copy(m_pImpl->arBuffer.begin(), m_pImpl->arBuffer.begin() + packet_bytes, std::back_inserter(*rcvdPacket.pData));
 
 	if ( rcvdPacket.uCurrent != rcvdPacket.uTotal)
 	{
@@ -172,6 +176,8 @@ void TcpSession::SendHeadHandler( const boost::system::error_code& ec, std::size
 {
 	if (ec)
 	{
+		m_pImpl->funcBreakOff(m_pImpl->uHostId);
+		std::cout << ec.message();
 		return;
 	}
 
@@ -183,6 +189,8 @@ void TcpSession::SendBodyHandler( const boost::system::error_code& ec, std::size
 {
 	if (ec)
 	{
+		m_pImpl->funcBreakOff(m_pImpl->uHostId);
+		std::cout << ec.message();
 		return;
 	}
 
@@ -222,4 +230,9 @@ void TcpSession::SetReceiveFunc( const FuncReceive& pFunc )
 void TcpSession::SetResultFunc(const FuncResult& pFunc)
 {
 	m_pImpl->funcResult = pFunc;
+}
+
+void TcpSession::SetBreakOffFunc(const FuncBreakOff& pFunc)
+{
+	m_pImpl->funcBreakOff = pFunc;
 }

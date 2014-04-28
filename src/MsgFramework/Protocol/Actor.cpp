@@ -8,6 +8,7 @@
 #include "act/Actbase.h"
 #include "act/ActConnect.h"
 #include "act/ActOnline.h"
+#include "act/ActApp.h"
 
 class Actor::Impl
 {
@@ -79,9 +80,19 @@ unsigned int Actor::SendData(unsigned int uHostId, unsigned short eActType, std:
 
 unsigned int Actor::as_SendData(unsigned int uHostId, unsigned short eActType, std::vector<char>* ptData)
 {
-	boost::mutex::scoped_lock lock(m_pImpl->mxOrderId);
-	unsigned int uOrder = m_pImpl->icOrderId();
-	m_pImpl->iosWork.post(boost::bind(m_pImpl->sendFunc, uHostId, uOrder, eActType, ptData));
+	unsigned int uOrder(0);
+
+	if (uHostId)
+	{
+		boost::mutex::scoped_lock lock(m_pImpl->mxOrderId);
+		uOrder = m_pImpl->icOrderId();
+		m_pImpl->iosWork.post(boost::bind(m_pImpl->sendFunc, uHostId, uOrder, eActType, ptData));
+	}
+	else
+	{
+		m_pImpl->iosWork.post(boost::bind(m_pImpl->broadcastFunc, eActType, ptData));
+	}
+
 	return uOrder;
 }
 
@@ -89,12 +100,15 @@ void Actor::Init()
 {
 	ActBase* p = new ActConnect();
 	m_pImpl->mapAct[p->GetType()] = p;
-	p->SetSender(boost::bind(&Actor::SendData, this, _1, _2, _3));
+	p->SetActor(this);
 
 	p = new ActOnline();
 	m_pImpl->mapAct[p->GetType()] = p;
-	p->SetSender(boost::bind(&Actor::SendData, this, _1, _2, _3));
+	p->SetActor(this);
 
+	p = new ActApp();
+	m_pImpl->mapAct[p->GetType()] = p;
+	p->SetActor(this);
 }
 
 

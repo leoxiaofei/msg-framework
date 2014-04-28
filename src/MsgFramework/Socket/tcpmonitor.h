@@ -44,6 +44,7 @@ protected:
 
 	void SendResult(unsigned int uOrder, int nResultFlag);
 
+	void BreakOff(unsigned int uHostId);
 
 	boost::asio::io_service& GetIOs();
 

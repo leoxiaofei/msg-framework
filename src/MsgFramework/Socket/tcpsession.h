@@ -21,10 +21,13 @@ public:
 
 	typedef boost::function<void(std::vector<char>*, unsigned int)> FuncReceive;
 	typedef boost::function<void(unsigned int, int)> FuncResult;
+	typedef boost::function<void(unsigned int)> FuncBreakOff;
 
 	void SetReceiveFunc(const FuncReceive& pFunc);
 
 	void SetResultFunc(const FuncResult& pFunc);
+
+	void SetBreakOffFunc(const FuncBreakOff& pFunc);
 
 protected:
 	void StartReceive();

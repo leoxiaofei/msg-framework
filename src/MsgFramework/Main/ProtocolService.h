@@ -2,6 +2,7 @@
 #define PROTOCOLSERVICE_H__
 
 class Dispatcher;
+class Actor;
 
 class ProtocolService
 {
@@ -13,6 +14,7 @@ public:
 	void Exit();
 
 	Dispatcher* GetDispatcher();
+	Actor* GetActor();
 
 protected:
 
