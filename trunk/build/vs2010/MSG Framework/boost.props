@@ -2,13 +2,13 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <BOOST>D:\ThirdParty\boost\1_54_0\</BOOST>
+    <BOOST>C:\Thirdparty\boost_1_55_0\</BOOST>
   </PropertyGroup>
   <PropertyGroup>
     <IncludePath>$(BOOST);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup>
-    <LibraryPath>$(BOOST)stage\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(BOOST)\lib32-msvc-10.0;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup>

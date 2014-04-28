@@ -40,28 +40,40 @@ SocketSignals* Dispatcher::GetSocketSignals()
 void Dispatcher::SendData(unsigned int uHostId, unsigned int uOrder, unsigned short eActType,
 	std::vector<char>* ptData )
 {
-	HostInfo* pHostInfo = HostManager::Instance().FindHost(uHostId);
-	if (pHostInfo)
+	if (uHostId)
 	{
-		unsigned int nOffSize = sizeof(eActType);
-		ptData->resize(ptData->size() + nOffSize);
-		std::copy(ptData->begin(), ptData->begin() + nOffSize, ptData->end() - nOffSize);
-		std::copy((char*)&eActType, (char*)&eActType + nOffSize, ptData->begin());
-
-		switch(HostManager::GetHostType(pHostInfo))
+		HostInfo* pHostInfo = HostManager::Instance().FindHost(uHostId);
+		if (pHostInfo)
 		{
-		case HostManager::TT_UDP:
-			m_pImpl->sendSignals.EmitSendUdp(uOrder, ptData, uHostId);
-			break;
-		case HostManager::TT_TCP:
-			m_pImpl->sendSignals.EmitSendTcp(uOrder, ptData, uHostId);
-			break;
-		default:
-			assert(false);
-			break;
+			unsigned int nOffSize = sizeof(eActType);
+			ptData->resize(ptData->size() + nOffSize);
+			std::copy(ptData->begin(), ptData->begin() + nOffSize, ptData->end() - nOffSize);
+			std::copy((char*)&eActType, (char*)&eActType + nOffSize, ptData->begin());
+
+			switch (HostManager::GetHostType(pHostInfo))
+			{
+			case HostManager::TT_UDP:
+				m_pImpl->sendSignals.EmitSendUdp(uOrder, ptData, uHostId);
+				break;
+			case HostManager::TT_TCP:
+				m_pImpl->sendSignals.EmitSendTcp(uOrder, ptData, uHostId);
+				break;
+			default:
+				assert(false);
+				break;
+			}
+		}
+		else
+		{
+			/// TODO:如果没有找到，报错
+
 		}
 	}
-	/// TODO:如果没有找到，报错
+	else
+	{
+		BroadcastData(eActType, ptData);
+	}
+
 }
 
 void Dispatcher::RecUdpData(unsigned int uHostId, std::vector<char>* ptData )
@@ -127,20 +139,33 @@ void Dispatcher::as_UdpConResult(unsigned int uHostId, bool bSuccess)
 	//m_pImpl->appSignals.EmitConResult(strAddr, uPort, uHostId);
 }
 
-void Dispatcher::StartConnect( const std::string& strIp, unsigned short uPort, int eType )
+// void Dispatcher::StartConnect( const std::string& strIp, unsigned short uPort, int eType )
+// {
+// 	switch(eType)
+// 	{
+// 	case HostManager::TT_TCP:
+// 		{
+// 		HostInfo* pHostInfo = HostManager::Instance().TakeHost(strIp, uPort, HostManager::TT_TCP);
+// 		m_pImpl->sendSignals.EmitTcpConnect(pHostInfo->uHostId);
+// 		}
+// 		break;
+// 	case HostManager::TT_UDP:
+// 		{
+// 
+// 		}
+// 		break;
+// 	default:
+// 		break;
+// 	}
+// }
+
+void Dispatcher::StartConnect(unsigned int uHostId)
 {
-	switch(eType)
+	HostInfo* pHostInfo = HostManager::Instance().FindHost(uHostId);
+	switch (HostManager::GetHostType(pHostInfo))
 	{
 	case HostManager::TT_TCP:
-		{
-		HostInfo* pHostInfo = HostManager::Instance().TakeHost(strIp, uPort, HostManager::TT_TCP);
-		m_pImpl->sendSignals.EmitTcpConnect(pHostInfo->uHostId);
-		}
-		break;
-	case HostManager::TT_UDP:
-		{
-
-		}
+		m_pImpl->sendSignals.EmitTcpConnect(uHostId);
 		break;
 	default:
 		break;

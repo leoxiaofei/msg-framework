@@ -61,3 +61,8 @@ Dispatcher* ProtocolService::GetDispatcher()
 	return &m_pImpl->dispatcher;
 }
 
+Actor* ProtocolService::GetActor()
+{
+	return &m_pImpl->actor;
+}
+

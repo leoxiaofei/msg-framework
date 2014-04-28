@@ -9,6 +9,7 @@ public:
 	SigReceive		sigReceive;
 	SigSendResult	sigSendResult;
 	SigConResult	sigConResult;
+	SigBreakOff     sigBreakOff;
 };
 
 MsgSignals::MsgSignals()
@@ -50,5 +51,15 @@ void MsgSignals::ConnectConResult( const SlotConResult& pFunc )
 void MsgSignals::EmitConResult(unsigned int uHostId, bool bSuccess)
 {
 	m_pImpl->sigConResult(uHostId, bSuccess);
+}
+
+void MsgSignals::ConnectBreakOff(const SlotBreakOff& pFunc)
+{
+	m_pImpl->sigBreakOff.connect(pFunc);
+}
+
+void MsgSignals::EmitBreakOff(unsigned int uHostId)
+{
+	m_pImpl->sigBreakOff(uHostId);
 }
 

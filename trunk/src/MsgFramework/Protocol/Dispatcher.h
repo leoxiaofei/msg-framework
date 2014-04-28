@@ -28,13 +28,14 @@ public:
 	void BroadcastData(unsigned short eActType, std::vector<char>* ptData);
 
 public: ///App调用
-	void as_UdpConnect(const std::string& strIp, unsigned short uPort);
-	void as_TcpConnect(const std::string& strIp, unsigned short uPort);
+// 	void as_UdpConnect(const std::string& strIp, unsigned short uPort);
+// 	void as_TcpConnect(const std::string& strIp, unsigned short uPort);
 	//void as_BroadcastData(std::vector<char>* ptData);
 	//unsigned int as_SendData(unsigned int uHostId, std::vector<char>* ptData);
+	void as_Connect(unsigned int uHostId);
 
 protected:
-	void StartConnect(const std::string& strIp, unsigned short uPort, int eType);
+	void StartConnect(unsigned int uHostId);
 
 public: ///Socket调用
 	void as_ReceiveUdpData(unsigned int uHostId, std::vector<char>* ptData);

@@ -6,17 +6,23 @@
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
 
-void Dispatcher::as_TcpConnect(const std::string& strIp, unsigned short uPort)
+// void Dispatcher::as_TcpConnect(const std::string& strIp, unsigned short uPort)
+// {
+// 	GetIOs().post(boost::bind(&Dispatcher::StartConnect, this,
+// 		strIp, uPort, HostManager::TT_TCP));
+// }
+// 
+// void Dispatcher::as_UdpConnect(const std::string& strIp, unsigned short uPort)
+// {
+// 	GetIOs().post(boost::bind(&Dispatcher::StartConnect, this,
+// 		strIp, uPort, HostManager::TT_UDP));
+// }
+
+void Dispatcher::as_Connect(unsigned int uHostId)
 {
-	GetIOs().post(boost::bind(&Dispatcher::StartConnect, this,
-		strIp, uPort, HostManager::TT_TCP));
+	GetIOs().post(boost::bind(&Dispatcher::StartConnect, this, uHostId));
 }
 
-void Dispatcher::as_UdpConnect(const std::string& strIp, unsigned short uPort)
-{
-	GetIOs().post(boost::bind(&Dispatcher::StartConnect, this,
-		strIp, uPort, HostManager::TT_UDP));
-}
 
 // unsigned int Dispatcher::as_SendData(unsigned int uHostId, std::vector<char>* ptData)
 // {

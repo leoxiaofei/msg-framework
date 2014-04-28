@@ -9,6 +9,7 @@
 
 #include <unordered_map>
 #include <map>
+#include <boost/thread/mutex.hpp>
 
 typedef std::tr1::unordered_map<std::string, HostInfo*> HsIpHost;
 typedef std::map<unsigned int, HostInfo*>               MapIdHost;
@@ -21,6 +22,7 @@ public:
 	HsIpHost hsIpHost[TT_TOTAL];
 	MapIdHost mapIdHost;
 	IdCreater<unsigned int> icHost;
+	boost::mutex mxHost;
 };
 
 HostManager::HostManager()
@@ -36,21 +38,10 @@ HostManager::~HostManager()
 
 HostInfo* HostManager::FindHost( unsigned int uHostId )
 {
+	boost::mutex::scoped_lock lock(m_pImpl->mxHost);
 	HostInfo* pRet(NULL);
 	MapIdHost::iterator iFind = m_pImpl->mapIdHost.find(uHostId);
 	if (iFind != m_pImpl->mapIdHost.end())
-	{
-		pRet = iFind->second;
-	}
-	return pRet;
-}
-
-HostInfo* HostManager::FindHost( const std::string& strIp, unsigned short uPort, TransType eType )
-{
-	HostInfo* pRet(NULL);
-	std::string strTemp = GetHsDesc(strIp, uPort);
-	HsIpHost::iterator iFind = m_pImpl->hsIpHost[eType].find(strTemp);
-	if (iFind != m_pImpl->hsIpHost[eType].end())
 	{
 		pRet = iFind->second;
 	}
@@ -74,6 +65,7 @@ void HostManager::RemoveHost( const HostInfo* pHostInfo )
 
 void HostManager::DeleteHost( unsigned int uHostId )
 {
+	boost::mutex::scoped_lock lock(m_pImpl->mxHost);
 	HostInfo* pHostInfo = FindHost(uHostId);
 	if (pHostInfo)
 	{
@@ -92,24 +84,6 @@ void HostManager::DeleteHost( const std::string& strIp, unsigned short uPort, Tr
 	}
 }
 
-HostInfo* HostManager::NewHost( const std::string& strIp, unsigned short uPort, TransType eType )
-{
-	HostInfo* pHostInfo = m_pImpl->mopHostPool.New();
-	if (pHostInfo == NULL)
-	{
-		pHostInfo = new HostInfo;
-	}
-	pHostInfo->strIp = strIp;
-	pHostInfo->uPort = uPort;
-	pHostInfo->uHostId = m_pImpl->icHost();
-	if (eType == TT_TCP)
-	{
-		pHostInfo->uHostId |= 0x80000000;
-	}
-	AddHost(pHostInfo);
-	return pHostInfo;
-}
-
 HostManager::TransType HostManager::GetHostType( const HostInfo* pHostInfo )
 {
 	return (pHostInfo->uHostId & 0x80000000) ? TT_TCP : TT_UDP;
@@ -126,6 +100,7 @@ std::string HostManager::GetHsDesc( const std::string& strIp, unsigned short uPo
 
 HostInfo* HostManager::TakeHost(const std::string& strAddr, unsigned int uPort, TransType eType)
 {
+	boost::mutex::scoped_lock lock(m_pImpl->mxHost);
 	HostInfo* pHostInfo = FindHost(strAddr, uPort, eType);
 	if (pHostInfo == NULL)
 	{
@@ -134,40 +109,32 @@ HostInfo* HostManager::TakeHost(const std::string& strAddr, unsigned int uPort, 
 	return pHostInfo;
 }
 
-// unsigned int HostManager::NewHost( const std::string& strIp, unsigned short uPort )
-// {
-// 	HostInfo* pHostInfo = m_pImpl->mopHostPool.New();
-// 	if (pHostInfo == NULL)
-// 	{
-// 		pHostInfo = new HostInfo;
-// 	}
-// 	pHostInfo->strIp = strIp;
-// 	pHostInfo->uPort = uPort;
-// 	pHostInfo->uHostId = m_pImpl->icHost();
-// 	AddHost(pHostInfo);
-// 	return pHostInfo->uHostId;
-// }
+HostInfo* HostManager::FindHost(const std::string& strIp, unsigned short uPort, TransType eType)
+{
+	HostInfo* pRet(NULL);
+	std::string strTemp = GetHsDesc(strIp, uPort);
+	HsIpHost::iterator iFind = m_pImpl->hsIpHost[eType].find(strTemp);
+	if (iFind != m_pImpl->hsIpHost[eType].end())
+	{
+		pRet = iFind->second;
+	}
+	return pRet;
+}
 
-// HostInfo* HostManager::FindHost( const std::string& strIp, unsigned short uPort )
-// {
-// 	HostInfo* pRet(NULL);
-// 	std::string strTemp;
-// 	std::stringstream ss;
-// 	ss<<strIp<<uPort;
-// 	ss>>strTemp;
-// 	HsIpHost::iterator iFind = m_pImpl->hsIpHost.find(strTemp);
-// 	if (iFind != m_pImpl->hsIpHost.end())
-// 	{
-// 		pRet = iFind->second;
-// 	}
-// 	return pRet;
-// }
-// void HostManager::DeleteHost( const std::string& strIp, unsigned short uPort )
-// {
-// 	HostInfo* pHostInfo = FindHost(strIp, uPort);
-// 	if (pHostInfo)
-// 	{
-// 		RemoveHost(pHostInfo);
-// 		m_pImpl->mopHostPool.Recycle(pHostInfo);		
-// 	}
-// }
+HostInfo* HostManager::NewHost(const std::string& strIp, unsigned short uPort, TransType eType)
+{
+	HostInfo* pHostInfo = m_pImpl->mopHostPool.New();
+	if (pHostInfo == NULL)
+	{
+		pHostInfo = new HostInfo;
+	}
+	pHostInfo->strIp = strIp;
+	pHostInfo->uPort = uPort;
+	pHostInfo->uHostId = m_pImpl->icHost();
+	if (eType == TT_TCP)
+	{
+		pHostInfo->uHostId |= 0x80000000;
+	}
+	AddHost(pHostInfo);
+	return pHostInfo;
+}

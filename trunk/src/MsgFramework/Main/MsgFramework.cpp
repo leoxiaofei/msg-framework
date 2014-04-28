@@ -17,6 +17,11 @@
 #include "../Socket/constant.h"
 #include "../Protocol/DispZlib.h"
 #include <boost/iostreams/stream.hpp> 
+#include "../Common/hostmanager.h"
+#include "../Common/hostinfo.h"
+#include "../Protocol/Agreement.h"
+#include <sstream>
+#include "../Protocol/Actor.h"
 
 char* sz = 
 	"Welcome to the Boost C++ Libraries\n"
@@ -188,25 +193,32 @@ int MsgFrameMain( int argc, _TCHAR* argv[] )
 	dispatcher->GetSocketSignals()->ConnectTcpConnect(boost::bind(&TcpMonitor::Connect, 
 		tcp, _1));
 
-	Sleep(5000);
 
-// 	unsigned int uHostId = dispatcher->TcpConnect("127.0.0.1", 5123);
-//  	Sleep(5000);
-// 	std::vector<char>* ptData(new std::stringstream);
-// 	(*ptData)<<sz;
-// 	dispatcher->SendData(uHostId, ptData);
-// 	Sleep(5000);
+	if(argc == 2)
+	{
+		Sleep(2000);
+		HostInfo* pHostInfo = HostManager::Instance().TakeHost("192.168.0.20", 5123, HostManager::TT_TCP);
+		dispatcher->as_Connect(pHostInfo->uHostId);
+		Sleep(5000);
+		std::vector<char>* ptData(new std::vector<char>);
+		ptData->resize(strlen(sz) + 1);
+		strcpy(ptData->data(), sz);
+		Actor* pActor = protocol.GetActor();
+		pActor->as_SendData(pHostInfo->uHostId, Agreement::PA_APP, ptData);
+	}
+	//dispatcher->SendData(pHostInfo->uHostId, 1, Agreement::PA_APP, ptData);
+ //	Sleep(5000);
 
 	//uHostId = dispatcher->UdpConnect("127.0.0.1", 5123);
 	//dispatcher->SendData(uHostId, ptData);
 	//Sleep(5000);
-	system("PAUSE");
+//	system("PAUSE");
 // 
 // 	service.GetTcp()->Connect("127.0.0.1");
 // 	Sleep(5000);
 // 	service.GetTcp()->SendTo(1, sz, strlen(sz)+1, "127.0.0.1");
 // //	service.GetUdp()->SendTo(10, sz, strlen(sz)+1, "127.0.0.1");
-// 	service.Wait();
+	msg.Wait();
 	return 0;
 }
 
