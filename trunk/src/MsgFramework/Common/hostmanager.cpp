@@ -4,8 +4,8 @@
 
 #include "hostinfo.h"
 
-#include "../Tools/MsgObjectPool.hpp"
-#include "../Tools/IdCreater.hpp"
+#include "../Tools/msgobjectpool.hpp"
+#include "../Tools/idcreater.hpp"
 
 #include <unordered_map>
 #include <map>
@@ -23,6 +23,8 @@ public:
 	MapIdHost mapIdHost;
 	IdCreater<unsigned int> icHost;
 	boost::mutex mxHost;
+
+
 };
 
 HostManager::HostManager()

@@ -43,30 +43,24 @@
     <Filter Include="Source Files\Common">
       <UniqueIdentifier>{6d1ecf12-ce1f-4c0f-97ac-16e289fbca92}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Protocol\act">
+    <Filter Include="Header Files\Protocol\Act">
+      <UniqueIdentifier>{397322c3-9ace-40ef-be13-ad3ed5ffc66d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Protocol\Dis">
+      <UniqueIdentifier>{a44de07d-5a52-42ee-a818-315c5fc20ab9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Protocol\Act">
       <UniqueIdentifier>{07253f5e-9e52-457b-98ac-e58252354445}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Protocol\act">
-      <UniqueIdentifier>{397322c3-9ace-40ef-be13-ad3ed5ffc66d}</UniqueIdentifier>
+    <Filter Include="Source Files\Protocol\Dis">
+      <UniqueIdentifier>{c8ac4829-411e-45c9-be8d-b883295f0962}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\MsgFramework\Main\main.cpp">
       <Filter>Source Files\Main</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\MsgFramework\Main\MsgFramework.cpp">
-      <Filter>Source Files\Main</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\MsgFramework\Main\MsgService.cpp">
-      <Filter>Source Files\Main</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\MsgFramework\Main\ProtocolService.cpp">
-      <Filter>Source Files\Main</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\appsignals.cpp">
-      <Filter>Source Files\Protocol</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Dispatcher.cpp">
       <Filter>Source Files\Protocol</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\MsgFramework\Protocol\socketsignals.cpp">
@@ -90,18 +84,6 @@
     <ClCompile Include="..\..\..\src\MsgFramework\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\ProtSet.cpp">
-      <Filter>Source Files\Protocol</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\ProtManager.cpp">
-      <Filter>Source Files\Protocol</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\DispZlib.cpp">
-      <Filter>Source Files\Protocol</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\DispXor.cpp">
-      <Filter>Source Files\Protocol</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\MsgFramework\Common\vcpool.cpp">
       <Filter>Source Files\Common</Filter>
     </ClCompile>
@@ -111,66 +93,75 @@
     <ClCompile Include="..\..\..\src\MsgFramework\Socket\tcpmonitor_as.cpp">
       <Filter>Source Files\Socket</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Dispatcher_as.cpp">
-      <Filter>Source Files\Protocol</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Actor.cpp">
-      <Filter>Source Files\Protocol</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActConnect.cpp">
-      <Filter>Source Files\Protocol\act</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActApp.cpp">
-      <Filter>Source Files\Protocol\act</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActCall.cpp">
-      <Filter>Source Files\Protocol\act</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActHere.cpp">
-      <Filter>Source Files\Protocol\act</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActOffline.cpp">
-      <Filter>Source Files\Protocol\act</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActOnline.cpp">
-      <Filter>Source Files\Protocol\act</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActProtReq.cpp">
-      <Filter>Source Files\Protocol\act</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\act\ActProtResp.cpp">
-      <Filter>Source Files\Protocol\act</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\MsgFramework\Common\hostmanager.cpp">
       <Filter>Source Files\Common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\MsgFramework\Socket\skconvert.cpp">
       <Filter>Source Files\Socket</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\actor.cpp">
+      <Filter>Source Files\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\protset.cpp">
+      <Filter>Source Files\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\protmanager.cpp">
+      <Filter>Source Files\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\dispatcher.cpp">
+      <Filter>Source Files\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\dispatcher_as.cpp">
+      <Filter>Source Files\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\protproc.cpp">
+      <Filter>Source Files\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Main\protocolservice.cpp">
+      <Filter>Source Files\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Main\msgservice.cpp">
+      <Filter>Source Files\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Main\frameworkentry.cpp">
+      <Filter>Source Files\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Act\actapp.cpp">
+      <Filter>Source Files\Protocol\Act</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Act\actcall.cpp">
+      <Filter>Source Files\Protocol\Act</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Act\actconnect.cpp">
+      <Filter>Source Files\Protocol\Act</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Act\acthere.cpp">
+      <Filter>Source Files\Protocol\Act</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Act\actoffline.cpp">
+      <Filter>Source Files\Protocol\Act</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Act\actonline.cpp">
+      <Filter>Source Files\Protocol\Act</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Act\actprotreq.cpp">
+      <Filter>Source Files\Protocol\Act</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Act\actprotresp.cpp">
+      <Filter>Source Files\Protocol\Act</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Dis\dispxor.cpp">
+      <Filter>Source Files\Protocol\Dis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Dis\dispzlib.cpp">
+      <Filter>Source Files\Protocol\Dis</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\src\MsgFramework\Main\MsgService.h">
-      <Filter>Header Files\Main</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Main\ProtocolService.h">
-      <Filter>Header Files\Main</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Main\MsgFramework.h">
-      <Filter>Header Files\Main</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\appsignals.h">
       <Filter>Header Files\Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Dispatcher.h">
-      <Filter>Header Files\Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\ProtocolBase.h">
-      <Filter>Header Files\Protocol</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\MsgFramework\Protocol\socketsignals.h">
-      <Filter>Header Files\Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Agreement.h">
       <Filter>Header Files\Protocol</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\MsgFramework\Socket\rcvdtcppacket.h">
@@ -200,12 +191,6 @@
     <ClInclude Include="..\..\..\src\MsgFramework\Socket\msgsignals.h">
       <Filter>Header Files\Socket</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Tools\IdCreater.hpp">
-      <Filter>Header Files\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Tools\MsgObjectPool.hpp">
-      <Filter>Header Files\Tools</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\MsgFramework\stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -215,62 +200,11 @@
     <ClInclude Include="..\..\..\src\MsgFramework\Socket\constant.h">
       <Filter>Header Files\Socket</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\ProtSet.h">
-      <Filter>Header Files\Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\UserInfo.h">
-      <Filter>Header Files\Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\ProtManager.h">
-      <Filter>Header Files\Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\DispZlib.h">
-      <Filter>Header Files\Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\DispXor.h">
-      <Filter>Header Files\Protocol</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\MsgFramework\Tools\container_device.hpp">
-      <Filter>Header Files\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Tools\VectorDevice.h">
       <Filter>Header Files\Tools</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\MsgFramework\Common\vcpool.h">
       <Filter>Header Files\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Actor.h">
-      <Filter>Header Files\Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Actbase.h">
-      <Filter>Header Files\Protocol</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActConnect.h">
-      <Filter>Header Files\Protocol\act</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\Actbase.h">
-      <Filter>Header Files\Protocol\act</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActApp.h">
-      <Filter>Header Files\Protocol\act</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActCall.h">
-      <Filter>Header Files\Protocol\act</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActHere.h">
-      <Filter>Header Files\Protocol\act</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActOffline.h">
-      <Filter>Header Files\Protocol\act</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActOnline.h">
-      <Filter>Header Files\Protocol\act</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActProtReq.h">
-      <Filter>Header Files\Protocol\act</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\act\ActProtResp.h">
-      <Filter>Header Files\Protocol\act</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\MsgFramework\Common\hostinfo.h">
       <Filter>Header Files\Common</Filter>
@@ -280,6 +214,84 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\MsgFramework\Socket\skconvert.h">
       <Filter>Header Files\Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\actor.h">
+      <Filter>Header Files\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\protset.h">
+      <Filter>Header Files\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\protmanager.h">
+      <Filter>Header Files\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\dispatcher.h">
+      <Filter>Header Files\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Tools\generalserialize.hpp">
+      <Filter>Header Files\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Tools\msgobjectpool.hpp">
+      <Filter>Header Files\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Tools\idcreater.hpp">
+      <Filter>Header Files\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Tools\vectordevice.h">
+      <Filter>Header Files\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\protproc.h">
+      <Filter>Header Files\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\agreement.h">
+      <Filter>Header Files\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Main\protocolservice.h">
+      <Filter>Header Files\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Main\msgservice.h">
+      <Filter>Header Files\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Main\frameworkentry.h">
+      <Filter>Header Files\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Common\userinfo.h">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Act\actapp.h">
+      <Filter>Header Files\Protocol\Act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Act\actbase.h">
+      <Filter>Header Files\Protocol\Act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Act\actcall.h">
+      <Filter>Header Files\Protocol\Act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Act\actconnect.h">
+      <Filter>Header Files\Protocol\Act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Act\acthere.h">
+      <Filter>Header Files\Protocol\Act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Act\actoffline.h">
+      <Filter>Header Files\Protocol\Act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Act\actonline.h">
+      <Filter>Header Files\Protocol\Act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Act\actprotreq.h">
+      <Filter>Header Files\Protocol\Act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Act\actprotresp.h">
+      <Filter>Header Files\Protocol\Act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Dis\dispzlib.h">
+      <Filter>Header Files\Protocol\Dis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Dis\protocolbase.h">
+      <Filter>Header Files\Protocol\Dis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Dis\dispxor.h">
+      <Filter>Header Files\Protocol\Dis</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

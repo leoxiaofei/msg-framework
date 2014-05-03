@@ -4,7 +4,7 @@
 #include "tcpsession.h"
 #include "tcppacket.h"
 #include "rcvdtcppacket.h"
-#include "../Tools/MsgObjectPool.hpp"
+#include "../Tools/msgobjectpool.hpp"
 
 #include <boost/bind.hpp>
 #include <boost/asio/placeholders.hpp>

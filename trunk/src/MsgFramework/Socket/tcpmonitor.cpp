@@ -4,7 +4,7 @@
 #include "tcppacket.h"
 #include "msgsignals.h"
 #include "../Common/vcpool.h"
-#include "../Tools/MsgObjectPool.hpp"
+#include "../Tools/msgobjectpool.hpp"
 
 #include <boost/bind.hpp>
 #include <boost/asio/ip/tcp.hpp>

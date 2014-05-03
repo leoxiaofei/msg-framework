@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "udpsession.h"
 
-#include "../Tools/MsgObjectPool.hpp"
+#include "../Tools/msgobjectpool.hpp"
 #include "rcvdudppacket.h"
 #include "udppacket.h"
 

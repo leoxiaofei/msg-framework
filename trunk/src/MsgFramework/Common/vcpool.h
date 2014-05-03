@@ -1,7 +1,7 @@
 #ifndef VCPOOL_H__
 #define VCPOOL_H__
 
-#include "../Tools/MsgObjectPool.hpp"
+#include "../Tools/msgobjectpool.hpp"
 
 class VcPool : public MsgObjectPool<std::vector<char> >
 {

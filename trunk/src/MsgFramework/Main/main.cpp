@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 
-#include "MsgFramework.h"
+#include "frameworkentry.h"
 
 #include <windows.h>
 
@@ -130,7 +130,7 @@ void WINAPI ServiceMain(
 
 	// TO_DO: Perform work until service stops.   
 	//你需要的操作在此添加代码  
-	MsgFrameMain(dwNumServicesArgs, lpServiceArgVectors);
+	MsgFrameEntry(dwNumServicesArgs, lpServiceArgVectors);
 	SetEvent(ghSvcStopEvent);
 
 	// Check whether to stop the service.  
@@ -152,7 +152,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	if (!StartServiceCtrlDispatcher(DispatchTable))  
 	{
 		ServerReportEvent(SERVICE_NAME, TEXT("StartServiceCtrlDispatcher"));  
-		MsgFrameMain(argc, argv);
+		MsgFrameEntry(argc, argv);
 	}
 
 	return 0;  
