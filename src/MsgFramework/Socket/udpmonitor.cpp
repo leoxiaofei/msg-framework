@@ -4,7 +4,7 @@
 #include "udppacket.h"
 #include "rcvdudppacket.h"
 #include "udpsession.h"
-#include "../Tools/MsgObjectPool.hpp"
+#include "../Tools/msgobjectpool.hpp"
 
 #include <boost/bind.hpp>
 #include <boost/asio/placeholders.hpp>
