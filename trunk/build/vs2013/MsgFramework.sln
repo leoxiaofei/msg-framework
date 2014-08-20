@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MsgFramework", "MsgFramework\MsgFramework.vcxproj", "{7D9F66B4-2B36-435E-8777-ED539696EF52}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "msgframework", "MsgFramework\MsgFramework.vcxproj", "{7D9F66B4-2B36-435E-8777-ED539696EF52}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "msgassist", "msgassist\msgassist.vcxproj", "{E09A7E6E-A4D6-449F-A643-3B3BD14CAE2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{7D9F66B4-2B36-435E-8777-ED539696EF52}.Debug|Win32.Build.0 = Debug|Win32
 		{7D9F66B4-2B36-435E-8777-ED539696EF52}.Release|Win32.ActiveCfg = Release|Win32
 		{7D9F66B4-2B36-435E-8777-ED539696EF52}.Release|Win32.Build.0 = Release|Win32
+		{E09A7E6E-A4D6-449F-A643-3B3BD14CAE2F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E09A7E6E-A4D6-449F-A643-3B3BD14CAE2F}.Debug|Win32.Build.0 = Debug|Win32
+		{E09A7E6E-A4D6-449F-A643-3B3BD14CAE2F}.Release|Win32.ActiveCfg = Release|Win32
+		{E09A7E6E-A4D6-449F-A643-3B3BD14CAE2F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

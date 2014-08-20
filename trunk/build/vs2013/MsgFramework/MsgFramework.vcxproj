@@ -11,93 +11,57 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\MsgFramework\Common\hostmanager.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Common\vcpool.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Main\main.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Main\frameworkentry.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Main\msgservice.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Main\protocolservice.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\actor.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Act\actapp.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Act\actcall.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Act\actconnect.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Act\acthere.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Act\actoffline.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Act\actonline.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Act\actprotreq.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Act\actprotresp.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\appsignals.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\dispatcher.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\dispatcher_as.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Dis\dispxor.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\Dis\dispzlib.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\protmanager.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\protset.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\protproc.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Protocol\socketsignals.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Socket\msgsignals.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Socket\skconvert.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Socket\tcpmonitor.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Socket\tcpmonitor_as.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Socket\tcpsession.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Socket\udpmonitor.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Socket\udpmonitor_as.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\Socket\udpsession.cpp" />
-    <ClCompile Include="..\..\..\src\MsgFramework\stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+    <ClCompile Include="..\..\..\source\msgframework\Common\msgfmt.cpp" />
+    <ClCompile Include="..\..\..\source\msgframework\Common\msgver.cpp" />
+    <ClCompile Include="..\..\..\source\msgframework\Common\trafficdata.cpp" />
+    <ClCompile Include="..\..\..\source\msgframework\Main\frameworkentry.cpp" />
+    <ClCompile Include="..\..\..\source\msgframework\Main\main.cpp" />
+    <ClCompile Include="..\..\..\source\msgframework\Main\msgservice.cpp" />
+    <ClCompile Include="..\..\..\source\msgframework\Main\protocolservice.cpp" />
+    <ClCompile Include="..\..\..\source\msgframework\Protocol\actor.cpp" />
+    <ClCompile Include="..\..\..\source\msgframework\Protocol\Act\actbase.cpp" />
+    <ClCompile Include="..\..\..\source\msgframework\Protocol\Act\actentry.cpp" />
+    <ClCompile Include="..\..\..\source\msgframework\Protocol\dispatcher.cpp" />
+    <ClCompile Include="..\..\..\source\msgframework\Protocol\dispatcher_as.cpp" />
+    <ClCompile Include="..\..\..\source\msgframework\Protocol\pubkey.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\msgframework\Socket\udpmonitor.cpp" />
+    <ClCompile Include="..\..\..\source\MsgFramework\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\msgframework\Tools\blowfish.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\src\MsgFramework\Common\hostinfo.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Common\hostmanager.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Common\userinfo.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Common\vcpool.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Main\frameworkentry.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Main\msgservice.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Main\protocolservice.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\actor.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Act\actapp.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Act\actbase.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Act\actcall.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Act\actconnect.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Act\acthere.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Act\actoffline.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Act\actonline.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Act\actprotreq.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Act\actprotresp.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\agreement.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\appsignals.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\dispatcher.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Dis\dispxor.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Dis\dispzlib.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\Dis\protocolbase.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\protmanager.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\protset.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\protproc.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Protocol\socketsignals.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Socket\constant.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Socket\msgsignals.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Socket\rcvdtcppacket.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Socket\rcvdudppacket.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Socket\skconvert.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Socket\tcpmonitor.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Socket\tcppacket.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Socket\tcpsession.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Socket\udpmonitor.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Socket\udppacket.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Socket\udpsession.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\stdafx.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\targetver.h" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Tools\container_device.hpp" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Tools\generalserialize.hpp" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Tools\idcreater.hpp" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Tools\msgobjectpool.hpp" />
-    <ClInclude Include="..\..\..\src\MsgFramework\Tools\vectordevice.h" />
+    <ClInclude Include="..\..\..\source\msgframework\Common\msgfmt.h" />
+    <ClInclude Include="..\..\..\source\msgframework\Common\msgver.h" />
+    <ClInclude Include="..\..\..\source\msgframework\Common\trafficdata.h" />
+    <ClInclude Include="..\..\..\source\msgframework\Main\frameworkentry.h" />
+    <ClInclude Include="..\..\..\source\msgframework\Main\msgservice.h" />
+    <ClInclude Include="..\..\..\source\msgframework\Main\protocolservice.h" />
+    <ClInclude Include="..\..\..\source\msgframework\Protocol\actor.h" />
+    <ClInclude Include="..\..\..\source\msgframework\Protocol\Act\actbase.h" />
+    <ClInclude Include="..\..\..\source\msgframework\Protocol\Act\actentry.h" />
+    <ClInclude Include="..\..\..\source\msgframework\Protocol\dispatcher.h" />
+    <ClInclude Include="..\..\..\source\msgframework\Protocol\ipmsg.h" />
+    <ClInclude Include="..\..\..\source\msgframework\Protocol\pubkey.h" />
+    <ClInclude Include="..\..\..\source\msgframework\Socket\udpmonitor.h" />
+    <ClInclude Include="..\..\..\source\MsgFramework\stdafx.h" />
+    <ClInclude Include="..\..\..\source\MsgFramework\targetver.h" />
+    <ClInclude Include="..\..\..\source\msgframework\Tools\blowfish.h" />
+    <ClInclude Include="..\..\..\source\msgframework\Tools\container_device.hpp" />
+    <ClInclude Include="..\..\..\source\msgframework\Tools\idcreater.hpp" />
+    <ClInclude Include="..\..\..\source\msgframework\Tools\mspool.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\source\msgframework\Tools\blowfish.h2" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7D9F66B4-2B36-435E-8777-ED539696EF52}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>MsgFramework</RootNamespace>
+    <ProjectName>msgframework</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -127,23 +91,29 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)../../src/MsgFramework;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../source/$(ProjectName);$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)..\..\binary\$(Configuration)\bin\</OutDir>
+    <IntDir>$(SolutionDir)..\..\temp\$(Configuration)\$(ProjectName)\</IntDir>
+    <LibraryPath>$(SolutionDir)../../library/$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)../../src/MsgFramework;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../source/$(ProjectName);$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)..\..\binary\$(Configuration)\bin\</OutDir>
+    <IntDir>$(SolutionDir)..\..\temp\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;BOOST_NO_ANSI_APIS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
