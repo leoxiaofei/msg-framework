@@ -4,6 +4,7 @@
 #include <boost/asio.hpp>
 #include <boost/thread/thread.hpp>
 #include "../Protocol/dispatcher.h"
+#include "../Protocol/actor.h"
 
 class ProtocolService::Impl
 {
@@ -11,6 +12,7 @@ public:
 	Impl()
 		: wkWork(new boost::asio::io_service::work(iosWork))
 		, dispatcher(iosWork)
+		, actor(iosWork)
 	{}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -20,17 +22,24 @@ public:
 
 
 	Dispatcher dispatcher;
+	Actor      actor;
+
 };
 
 ProtocolService::ProtocolService()
 : m_pImpl(new Impl)
 {
-
+	Init();
 }
 
 ProtocolService::~ProtocolService()
 {
 
+}
+
+void ProtocolService::Init()
+{
+	m_pImpl->actor.SetDispatcher(&m_pImpl->dispatcher);
 }
 
 void ProtocolService::Start()
@@ -51,5 +60,10 @@ void ProtocolService::Exit()
 Dispatcher* ProtocolService::GetDispatcher() const
 {
 	return &m_pImpl->dispatcher;
+}
+
+Actor* ProtocolService::GetActor() const
+{
+	return &m_pImpl->actor;
 }
 

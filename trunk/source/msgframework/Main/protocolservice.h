@@ -4,7 +4,7 @@
 #include <boost/scoped_ptr.hpp>
 
 class Dispatcher;
-
+class Actor;
 
 class ProtocolService
 {
@@ -18,6 +18,10 @@ public:
 	void Exit();
 
 	Dispatcher* GetDispatcher() const;
+	Actor*      GetActor() const;
+
+protected:
+	void Init();
 
 private:
 	boost::scoped_ptr<Impl> m_pImpl;

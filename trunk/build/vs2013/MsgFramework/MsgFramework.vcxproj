@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\source\msgframework\Common\globaldata.cpp" />
     <ClCompile Include="..\..\..\source\msgframework\Common\msgfmt.cpp" />
     <ClCompile Include="..\..\..\source\msgframework\Common\msgver.cpp" />
     <ClCompile Include="..\..\..\source\msgframework\Common\trafficdata.cpp" />
@@ -19,8 +20,11 @@
     <ClCompile Include="..\..\..\source\msgframework\Main\msgservice.cpp" />
     <ClCompile Include="..\..\..\source\msgframework\Main\protocolservice.cpp" />
     <ClCompile Include="..\..\..\source\msgframework\Protocol\actor.cpp" />
+    <ClCompile Include="..\..\..\source\msgframework\Protocol\Act\actansentry.cpp" />
     <ClCompile Include="..\..\..\source\msgframework\Protocol\Act\actbase.cpp" />
     <ClCompile Include="..\..\..\source\msgframework\Protocol\Act\actentry.cpp" />
+    <ClCompile Include="..\..\..\source\msgframework\Protocol\Act\actexit.cpp" />
+    <ClCompile Include="..\..\..\source\msgframework\Protocol\Act\actsendmsg.cpp" />
     <ClCompile Include="..\..\..\source\msgframework\Protocol\dispatcher.cpp" />
     <ClCompile Include="..\..\..\source\msgframework\Protocol\dispatcher_as.cpp" />
     <ClCompile Include="..\..\..\source\msgframework\Protocol\pubkey.cpp">
@@ -34,6 +38,7 @@
     <ClCompile Include="..\..\..\source\msgframework\Tools\blowfish.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\source\msgframework\Common\globaldata.h" />
     <ClInclude Include="..\..\..\source\msgframework\Common\msgfmt.h" />
     <ClInclude Include="..\..\..\source\msgframework\Common\msgver.h" />
     <ClInclude Include="..\..\..\source\msgframework\Common\trafficdata.h" />
@@ -41,8 +46,11 @@
     <ClInclude Include="..\..\..\source\msgframework\Main\msgservice.h" />
     <ClInclude Include="..\..\..\source\msgframework\Main\protocolservice.h" />
     <ClInclude Include="..\..\..\source\msgframework\Protocol\actor.h" />
+    <ClInclude Include="..\..\..\source\msgframework\Protocol\Act\actansentry.h" />
     <ClInclude Include="..\..\..\source\msgframework\Protocol\Act\actbase.h" />
     <ClInclude Include="..\..\..\source\msgframework\Protocol\Act\actentry.h" />
+    <ClInclude Include="..\..\..\source\msgframework\Protocol\Act\actexit.h" />
+    <ClInclude Include="..\..\..\source\msgframework\Protocol\Act\actsendmsg.h" />
     <ClInclude Include="..\..\..\source\msgframework\Protocol\dispatcher.h" />
     <ClInclude Include="..\..\..\source\msgframework\Protocol\ipmsg.h" />
     <ClInclude Include="..\..\..\source\msgframework\Protocol\pubkey.h" />
@@ -53,6 +61,7 @@
     <ClInclude Include="..\..\..\source\msgframework\Tools\container_device.hpp" />
     <ClInclude Include="..\..\..\source\msgframework\Tools\idcreater.hpp" />
     <ClInclude Include="..\..\..\source\msgframework\Tools\mspool.hpp" />
+    <ClInclude Include="..\..\..\source\msgframework\Tools\vectordevice.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\source\msgframework\Tools\blowfish.h2" />

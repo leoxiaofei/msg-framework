@@ -3,29 +3,32 @@
 #include <map>
 #include "..\Tools\idcreater.hpp"
 #include "act\actentry.h"
+#include "Act\actexit.h"
+#include "Act\actansentry.h"
+#include "dispatcher.h"
 
-typedef std::map<unsigned short, ActBase*> MapAct;
+#include <boost/bind.hpp>
 
 class Actor::Impl
 {
 public:
 	Impl(boost::asio::io_service& ios)
 		: iosWork(ios)
-		, icOrderId(0) {}
+		, icOrderId(0)
+		, pDispatcher(0){}
 
 	boost::asio::io_service& iosWork;
 
 // 	boost::mutex mxOrderId;
  	IdCreater<unsigned int> icOrderId;
 
-	MapAct mapAct;
+	Dispatcher* pDispatcher;
 };
 
 
 Actor::Actor(boost::asio::io_service& iosWork)
 	: m_pImpl(new Impl(iosWork))
 {
-	Init();
 }
 
 Actor::~Actor()
@@ -33,24 +36,42 @@ Actor::~Actor()
 
 }
 
-
-void Actor::Init()
+void Actor::Online(unsigned int uNetId) const
 {
-	RegAct<ActEntry>();
-}
-
-ActBase* Actor::GetActBase(unsigned short uType)
-{
-	ActBase* pBase(NULL);
-	MapAct::const_iterator ciFind = m_pImpl->mapAct.find(uType);
-	if (ciFind != m_pImpl->mapAct.end())
+	std::cout << "Online:" << uNetId << std::endl;
+	if (ActAnsEntry* pAnsEntry = m_pImpl->pDispatcher->GetAct<ActAnsEntry>())
 	{
-		pBase = ciFind->second;
+		pAnsEntry->SendMsg(uNetId);
 	}
-	return pBase;
 }
 
-void Actor::RegActBase(unsigned short uType, ActBase* pBase)
+void Actor::Offline(unsigned int uNetId) const
 {
-	m_pImpl->mapAct[uType] = pBase;
+	std::cout << "Offline:" << uNetId << std::endl;
 }
+
+void Actor::AnsOnline(unsigned int uNetId) const
+{
+
+}
+
+void Actor::SetDispatcher(Dispatcher* pDispatcher)
+{
+	m_pImpl->pDispatcher = pDispatcher;
+
+	if (ActEntry* pActEntry = pDispatcher->GetAct<ActEntry>())
+	{
+		pActEntry->SetReceiveFunc(boost::bind(&Actor::Online, this, _1));
+	}
+
+	if (ActExit* pActExit = pDispatcher->GetAct<ActExit>())
+	{
+		pActExit->SetReceiveFunc(boost::bind(&Actor::Offline, this, _1));
+	}
+
+	if (ActAnsEntry* pAnsEntry = pDispatcher->GetAct<ActAnsEntry>())
+	{
+		pAnsEntry->SetReceiveFunc(boost::bind(&Actor::AnsOnline, this, _1));
+	}
+}
+

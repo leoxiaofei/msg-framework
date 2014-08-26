@@ -2,6 +2,8 @@
 #include "msgver.h"
 
 #include <boost/lexical_cast.hpp>
+#include <sstream>
+#include "../Tools/vectordevice.h"
 
 int IPMsgVer::GetType() const
 {
@@ -12,6 +14,12 @@ bool IPMsgVer::Parse(const char* pData, unsigned int uSize)
 {
 	uVersion = boost::lexical_cast<unsigned int>(std::string(pData, uSize));
 	return true;
+}
+
+bool IPMsgVer::Packet(Msg::MsgStream& ms) const
+{
+	ms << uVersion;
+	return ms.rdstate() == Msg::MsgStream::goodbit;
 }
 
 int FeiQVer::GetType() const
@@ -138,5 +146,31 @@ bool FeiQVer::ParserVersion(const char* pData, unsigned int uSize)
 	} while (0);
 
 	return bRet;
+}
+
+///1_lbt6_0#128#000C29F4400C#0#0#0#4001#9
+
+bool FeiQVer::Packet(Msg::MsgStream& ms) const
+{
+	ms << "1_lbt6_";
+	ms << uAvatar;
+	ms << '#';
+	ms << uRank;
+	ms << '#';
+	std::string ss = strMacAddr;
+	std::reverse(ss.begin(), ss.end());
+	ms << ss;
+	ms << '#';
+	ms << uUnknow1;
+	ms << '#';
+	ms << uUnknow2;
+	ms << '#';
+	ms << uUnknow3;
+	ms << '#';
+	ms << uUnknow4;
+	ms << '#';
+	ms << uUnknow5;
+
+	return ms.rdstate() == Msg::MsgStream::goodbit;
 }
 
