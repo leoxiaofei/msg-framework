@@ -7,12 +7,9 @@
 class MsgVerBase;
 
 /// 版本号:包编号:发送者姓名:发送者主机名:命令字:附加信息
-class MsgFmt
+class MsgFmtData
 {
 public:
-	bool Parse(const std::vector<char>& vecData);
-	void Clear();
-
 	boost::shared_ptr<MsgVerBase> ptMsgVer;
 	unsigned int uBagNum;
 	std::string strUser;
@@ -21,7 +18,24 @@ public:
 	unsigned short uMode;
 	unsigned int uOpt;
 	std::string strAddition;
+};
 
+class MsgFmt
+{
+public:
+	MsgFmt();
+	~MsgFmt();
+
+	bool Parse(const std::vector<char>& vecData);
+	bool Packet(std::vector<char>& vecData) const;
+
+	void Clear();
+
+	MsgFmtData* d;
+
+private:
+	MsgFmt(const MsgFmt& other);
+	MsgFmt& operator = (const MsgFmt& other);
 };
 
 

@@ -99,6 +99,18 @@
     <ClCompile Include="..\..\..\source\msgframework\Protocol\Act\actbase.cpp">
       <Filter>Source Files\Protocol\Act</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\msgframework\Protocol\Act\actexit.cpp">
+      <Filter>Source Files\Protocol\Act</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\msgframework\Protocol\Act\actansentry.cpp">
+      <Filter>Source Files\Protocol\Act</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\msgframework\Protocol\Act\actsendmsg.cpp">
+      <Filter>Source Files\Protocol\Act</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\msgframework\Common\globaldata.cpp">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\source\MsgFramework\stdafx.h">
@@ -157,6 +169,21 @@
     </ClInclude>
     <ClInclude Include="..\..\..\source\msgframework\Protocol\Act\actentry.h">
       <Filter>Header Files\Protocol\Act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\msgframework\Protocol\Act\actexit.h">
+      <Filter>Header Files\Protocol\Act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\msgframework\Tools\vectordevice.h">
+      <Filter>Header Files\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\msgframework\Protocol\Act\actansentry.h">
+      <Filter>Header Files\Protocol\Act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\msgframework\Protocol\Act\actsendmsg.h">
+      <Filter>Header Files\Protocol\Act</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\msgframework\Common\globaldata.h">
+      <Filter>Header Files\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

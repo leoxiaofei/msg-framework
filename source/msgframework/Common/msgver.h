@@ -1,11 +1,17 @@
 #ifndef _MSGVER_H__
 #define _MSGVER_H__
 
+#include <vector>
+
+#include "../Tools/vectordevice.h"
+
+
 
 class MsgVerBase
 {
 public:
 	virtual bool Parse(const char* pData, unsigned int uSize) = 0;
+	virtual bool Packet(Msg::MsgStream& ms) const = 0;
 
 	virtual int GetType() const = 0;
 	enum { UserType = 1000 };
@@ -21,6 +27,7 @@ public:
 	enum { Type = UserType + 1 };
 	virtual int GetType() const;
 	virtual bool Parse(const char* pData, unsigned int uSize);
+	virtual bool Packet(Msg::MsgStream& ms) const;
 
 };
 
@@ -44,6 +51,7 @@ public:
 	enum { Type = UserType + 1 };
 	virtual int GetType() const ;
 	virtual bool Parse(const char* pData, unsigned int uSize);
+	virtual bool Packet(Msg::MsgStream& ms) const;
 
 protected:
 	bool ParserVersion(const char* pData, unsigned int uSize);

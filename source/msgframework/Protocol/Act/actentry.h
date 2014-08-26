@@ -3,13 +3,20 @@
 
 #include "actbase.h"
 
+typedef boost::function<void(unsigned int)> FuncEntry;
+
 class ActEntry : public ActBase
 {
 	ModeType(IPMSG_BR_ENTRY);
 
 public:
-	virtual bool ReceiveMsg(MsgFmt* pMsgFmt);
+	bool SendMsg();
+	virtual bool ReceiveMsg(MsgFmt* pMsgFmt, unsigned int uNetId);
 
+	void SetReceiveFunc(FuncEntry funcEntry);
+
+private:
+	FuncEntry m_funcEntry;
 };
 
 
